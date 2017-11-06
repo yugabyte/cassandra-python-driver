@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.io.asyncorereactor &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.io.asyncorereactor &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cassandra.html" accesskey="U">cassandra</a> &#187;</li> 
       </ul>
@@ -83,9 +83,10 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="nb">range</span>
 
@@ -114,6 +115,33 @@
         <span class="k">return</span>
 
     <span class="n">loop</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">WaitableTimer</span><span class="p">(</span><span class="n">Timer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="n">Timer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_exception</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_now</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">finished</span> <span class="o">=</span> <span class="n">Timer</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_now</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">finished</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_exception</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_exception</span>
 
 
 <span class="k">class</span> <span class="nc">_PipeWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -304,6 +332,11 @@
     <span class="k">def</span> <span class="nf">add_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_timers</span><span class="o">.</span><span class="n">add_timer</span><span class="p">(</span><span class="n">timer</span><span class="p">)</span>
 
+        <span class="c1"># This function is called from a different thread than the event loop</span>
+        <span class="c1"># thread, so for this call to be thread safe, we must wake up the loop</span>
+        <span class="c1"># in case it&#39;s stuck at a select</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_loop</span><span class="p">()</span>
+
     <span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">_dispatcher_map</span>
 
@@ -320,9 +353,13 @@
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Event loop thread was joined&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Ensure all connections are closed and  in-flight requests cancelled</span>
+        <span class="c1"># Ensure all connections are closed and in-flight requests cancelled</span>
         <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_dispatcher_map</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_dispatcher</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timers</span><span class="o">.</span><span class="n">service_timeouts</span><span class="p">()</span>
+        <span class="c1"># Once all the connections are closed, close the dispatcher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_dispatcher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Dispatchers were closed&quot;</span><span class="p">)</span>
 
@@ -370,15 +407,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">deque_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_connect_socket</span><span class="p">()</span>
-        <span class="n">asyncore</span><span class="o">.</span><span class="n">dispatcher</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="p">,</span> <span class="n">_dispatcher_map</span><span class="p">)</span>
+
+        <span class="c1"># start the event loop if needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="o">.</span><span class="n">maybe_start</span><span class="p">()</span>
+
+        <span class="n">init_handler</span> <span class="o">=</span> <span class="n">WaitableTimer</span><span class="p">(</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">asyncore</span><span class="o">.</span><span class="n">dispatcher</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span><span class="p">,</span> <span class="n">_dispatcher_map</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="o">.</span><span class="n">add_timer</span><span class="p">(</span><span class="n">init_handler</span><span class="p">)</span>
+        <span class="n">init_handler</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;connect_timeout&quot;</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_writable</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_send_options_message</span><span class="p">()</span>
-
-        <span class="c1"># start the event loop if needed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="o">.</span><span class="n">maybe_start</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
@@ -389,7 +433,10 @@
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Closing connection (</span><span class="si">%s</span><span class="s2">) to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_writable</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_readable</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">asyncore</span><span class="o">.</span><span class="n">dispatcher</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># We don&#39;t have to wait for this to be closed, we can just schedule it</span>
+        <span class="n">AsyncoreConnection</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">asyncore</span><span class="o">.</span><span class="n">dispatcher</span><span class="o">.</span><span class="n">close</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Closed socket to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_defunct</span><span class="p">:</span>
@@ -492,7 +539,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cassandra.html" >cassandra</a> &#187;</li> 
       </ul>

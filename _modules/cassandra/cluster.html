@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.cluster &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.cluster &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" accesskey="U">cassandra</a> &#187;</li> 
       </ul>
@@ -307,10 +307,19 @@
 <span class="sd">    Defaults to :class:`.NoSpeculativeExecutionPolicy` if not specified</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_balancing_policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry_policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># indicates if lbp was set explicitly or uses default values</span>
+    <span class="n">_load_balancing_policy_explicit</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_balancing_policy</span><span class="o">=</span><span class="n">_NOT_SET</span><span class="p">,</span> <span class="n">retry_policy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">consistency_level</span><span class="o">=</span><span class="n">ConsistencyLevel</span><span class="o">.</span><span class="n">LOCAL_ONE</span><span class="p">,</span> <span class="n">serial_consistency_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">request_timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">row_factory</span><span class="o">=</span><span class="n">named_tuple_factory</span><span class="p">,</span> <span class="n">speculative_execution_policy</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load_balancing_policy</span> <span class="o">=</span> <span class="n">load_balancing_policy</span> <span class="ow">or</span> <span class="n">default_lbp_factory</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">load_balancing_policy</span> <span class="ow">is</span> <span class="n">_NOT_SET</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_balancing_policy_explicit</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_balancing_policy</span> <span class="o">=</span> <span class="n">default_lbp_factory</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_balancing_policy_explicit</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_balancing_policy</span> <span class="o">=</span> <span class="n">load_balancing_policy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">retry_policy</span> <span class="o">=</span> <span class="n">retry_policy</span> <span class="ow">or</span> <span class="n">RetryPolicy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consistency_level</span> <span class="o">=</span> <span class="n">consistency_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_consistency_level</span> <span class="o">=</span> <span class="n">serial_consistency_level</span>
@@ -323,6 +332,15 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_profiles_without_explicit_lbps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">profile_name</span> <span class="k">for</span>
+                 <span class="n">profile_name</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                 <span class="k">if</span> <span class="ow">not</span> <span class="n">profile</span><span class="o">.</span><span class="n">_load_balancing_policy_explicit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="s1">&#39;EXEC_PROFILE_DEFAULT&#39;</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="n">EXEC_PROFILE_DEFAULT</span> <span class="k">else</span> <span class="n">n</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">load_balancing_policy</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">host</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -406,7 +424,14 @@
 <span class="sd">    local_dc set (as is the default), the DC is chosen from an arbitrary</span>
 <span class="sd">    host in contact_points. In this case, contact_points should contain</span>
 <span class="sd">    only nodes from a single, local DC.</span>
+
+<span class="sd">    Note: In the next major version, if you specify contact points, you will</span>
+<span class="sd">    also be required to also explicitly specify a load-balancing policy. This</span>
+<span class="sd">    change will help prevent cases where users had hard-to-debug issues</span>
+<span class="sd">    surrounding unintuitive default load-balancing policy behavior.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># tracks if contact_points was set explicitly or with default values</span>
+    <span class="n">_contact_points_explicit</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">port</span> <span class="o">=</span> <span class="mi">9042</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -435,6 +460,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">allow_beta_protocol_version</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">no_compact</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setting true injects a flag in all messages that makes the server accept and use &quot;beta&quot; protocol version.</span>
 <span class="sd">    Used for testing new protocol features incrementally before the new version is complete.</span>
@@ -798,7 +826,7 @@
     <span class="n">_listener_lock</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">contact_points</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">],</span>
+                 <span class="n">contact_points</span><span class="o">=</span><span class="n">_NOT_SET</span><span class="p">,</span>
                  <span class="n">port</span><span class="o">=</span><span class="mi">9042</span><span class="p">,</span>
                  <span class="n">compression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">auth_provider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -828,7 +856,8 @@
                  <span class="n">execution_profiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">allow_beta_protocol_version</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">timestamp_generator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">idle_heartbeat_timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+                 <span class="n">idle_heartbeat_timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                 <span class="n">no_compact</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ``executor_threads`` defines the number of threads in a pool for handling asynchronous tasks such as</span>
 <span class="sd">        extablishing connection pools or refreshing metadata.</span>
@@ -836,6 +865,12 @@
 <span class="sd">        Any of the mutable Cluster attributes may be set as keyword arguments to the constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">contact_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">contact_points</span> <span class="ow">is</span> <span class="n">_NOT_SET</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_contact_points_explicit</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">contact_points</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_contact_points_explicit</span> <span class="o">=</span> <span class="kc">True</span>
+
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">contact_points</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;contact_points should not be a string, it should be a sequence (e.g. list) of strings&quot;</span><span class="p">)</span>
 
@@ -854,6 +889,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">protocol_version</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version_explicit</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allow_beta_protocol_version</span> <span class="o">=</span> <span class="n">allow_beta_protocol_version</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_compact</span> <span class="o">=</span> <span class="n">no_compact</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">auth_provider</span> <span class="o">=</span> <span class="n">auth_provider</span>
 
@@ -907,10 +944,34 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Clusters constructed with execution_profiles should not specify legacy parameters &quot;</span>
                                  <span class="s2">&quot;load_balancing_policy or default_retry_policy. Configure this in a profile instead.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_config_mode</span> <span class="o">=</span> <span class="n">_ConfigMode</span><span class="o">.</span><span class="n">LEGACY</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">execution_profiles</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">execution_profiles</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_config_mode</span> <span class="o">=</span> <span class="n">_ConfigMode</span><span class="o">.</span><span class="n">PROFILES</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contact_points_explicit</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_mode</span> <span class="ow">is</span> <span class="n">_ConfigMode</span><span class="o">.</span><span class="n">PROFILES</span><span class="p">:</span>
+                <span class="n">default_lbp_profiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">_profiles_without_explicit_lbps</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">default_lbp_profiles</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s1">&#39;Cluster.__init__ called with contact_points &#39;</span>
+                        <span class="s1">&#39;specified, but load-balancing policies are not &#39;</span>
+                        <span class="s1">&#39;specified in some ExecutionProfiles. In the next &#39;</span>
+                        <span class="s1">&#39;major version, this will raise an error; please &#39;</span>
+                        <span class="s1">&#39;specify a load-balancing policy. &#39;</span>
+                        <span class="s1">&#39;(contact_points = </span><span class="si">{cp}</span><span class="s1">, &#39;</span>
+                        <span class="s1">&#39;EPs without explicit LBPs = </span><span class="si">{eps}</span><span class="s1">)&#39;</span>
+                        <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="n">contact_points</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">default_lbp_profiles</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">load_balancing_policy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s1">&#39;Cluster.__init__ called with contact_points &#39;</span>
+                        <span class="s1">&#39;specified, but no load_balancing_policy. In the next &#39;</span>
+                        <span class="s1">&#39;major version, this will raise an error; please &#39;</span>
+                        <span class="s1">&#39;specify a load-balancing policy. &#39;</span>
+                        <span class="s1">&#39;(contact_points = </span><span class="si">{cp}</span><span class="s1">, lbp = </span><span class="si">{lbp}</span><span class="s1">)&#39;</span>
+                        <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cp</span><span class="o">=</span><span class="n">contact_points</span><span class="p">,</span> <span class="n">lbp</span><span class="o">=</span><span class="n">load_balancing_policy</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">metrics_enabled</span> <span class="o">=</span> <span class="n">metrics_enabled</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssl_options</span> <span class="o">=</span> <span class="n">ssl_options</span>
@@ -1029,7 +1090,7 @@
                         <span class="s2">&quot;be returned when reading type </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span><span class="p">,</span> <span class="n">keyspace</span><span class="p">,</span> <span class="n">user_type</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_types</span><span class="p">[</span><span class="n">keyspace</span><span class="p">][</span><span class="n">user_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">klass</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">user_type_registered</span><span class="p">(</span><span class="n">keyspace</span><span class="p">,</span> <span class="n">user_type</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
         <span class="n">UserType</span><span class="o">.</span><span class="n">evict_udt_class</span><span class="p">(</span><span class="n">keyspace</span><span class="p">,</span> <span class="n">user_type</span><span class="p">)</span></div>
 
@@ -1053,13 +1114,28 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot add execution profiles when legacy parameters are set explicitly.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">profiles</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Profile </span><span class="si">%s</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
+        <span class="n">contact_points_but_no_lbp</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_contact_points_explicit</span> <span class="ow">and</span> <span class="ow">not</span>
+            <span class="n">profile</span><span class="o">.</span><span class="n">_load_balancing_policy_explicit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contact_points_but_no_lbp</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s1">&#39;Tried to add an ExecutionProfile with name </span><span class="si">{name}</span><span class="s1">. &#39;</span>
+                <span class="s1">&#39;</span><span class="si">{self}</span><span class="s1"> was explicitly configured with contact_points, but &#39;</span>
+                <span class="s1">&#39;</span><span class="si">{ep}</span><span class="s1"> was not explicitly configured with a &#39;</span>
+                <span class="s1">&#39;load_balancing_policy. In the next major version, trying to &#39;</span>
+                <span class="s1">&#39;add an ExecutionProfile without an explicitly configured LBP &#39;</span>
+                <span class="s1">&#39;to a cluster with explicitly configured contact_points will &#39;</span>
+                <span class="s1">&#39;raise an exception; please specify a load-balancing policy &#39;</span>
+                <span class="s1">&#39;in the ExecutionProfile.&#39;</span>
+                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ep</span><span class="o">=</span><span class="n">profile</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span>
         <span class="n">profile</span><span class="o">.</span><span class="n">load_balancing_policy</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">all_hosts</span><span class="p">())</span>
         <span class="c1"># on_up after populate allows things like DCA LBP to choose default local dc</span>
         <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">is_up</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">all_hosts</span><span class="p">()):</span>
             <span class="n">profile</span><span class="o">.</span><span class="n">load_balancing_policy</span><span class="o">.</span><span class="n">on_up</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
         <span class="n">futures</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">futures</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">update_created_pools</span><span class="p">())</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">not_done</span> <span class="o">=</span> <span class="n">wait_futures</span><span class="p">(</span><span class="n">futures</span><span class="p">,</span> <span class="n">pool_wait_timeout</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">not_done</span><span class="p">:</span>
@@ -1199,6 +1275,7 @@
         <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;protocol_version&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span><span class="p">)</span>
         <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;user_type_map&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_types</span><span class="p">)</span>
         <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;allow_beta_protocol_version&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_beta_protocol_version</span><span class="p">)</span>
+        <span class="n">kwargs_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;no_compact&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_compact</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">kwargs_dict</span>
 
@@ -1240,6 +1317,9 @@
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
                     <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">all_hosts</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_balancing_policy</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
+                    <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">all_hosts</span><span class="p">()</span>
+                <span class="p">)</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">control_connection</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
@@ -1274,7 +1354,7 @@
 
     <span class="k">def</span> <span class="nf">get_connection_holders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">holders</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">holders</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">get_pools</span><span class="p">())</span>
         <span class="n">holders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control_connection</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">holders</span>
@@ -1300,7 +1380,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">control_connection</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
@@ -1327,7 +1407,7 @@
     <span class="k">def</span> <span class="nf">_cleanup_failed_on_up_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">on_down</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">control_connection</span><span class="o">.</span><span class="n">on_down</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">remove_pool</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_reconnector</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">is_host_addition</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1366,7 +1446,7 @@
                 <span class="n">host</span><span class="o">.</span><span class="n">_currently_handling_node_up</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># see if there are any pools to add or remove now that the host is marked up</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">update_created_pools</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">on_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
@@ -1403,7 +1483,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_all_queries</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
                 <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done preparing all queries for host </span><span class="si">%s</span><span class="s2">, &quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">remove_pool</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
 
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Signalling to load balancing policies that host </span><span class="si">%s</span><span class="s2"> is up&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
@@ -1416,7 +1496,7 @@
             <span class="n">futures_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
             <span class="n">futures_results</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">callback</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_up_future_completed</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">futures</span><span class="p">,</span> <span class="n">futures_results</span><span class="p">,</span> <span class="n">futures_lock</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
                 <span class="n">future</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">add_or_renew_pool</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">is_host_addition</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">future</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">have_future</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1480,7 +1560,7 @@
             <span class="c1"># this is to avoid closing pools when a control connection host became isolated</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discount_down_events</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">host</span><span class="p">)</span> <span class="o">!=</span> <span class="n">HostDistance</span><span class="o">.</span><span class="n">IGNORED</span><span class="p">:</span>
                 <span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
                     <span class="n">pool_states</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_pool_state</span><span class="p">()</span>
                     <span class="n">pool_state</span> <span class="o">=</span> <span class="n">pool_states</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">pool_state</span><span class="p">:</span>
@@ -1496,7 +1576,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">on_down</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">control_connection</span><span class="o">.</span><span class="n">on_down</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">on_down</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">:</span>
@@ -1553,7 +1633,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_add</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
 
         <span class="n">have_future</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">future</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">add_or_renew_pool</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">is_host_addition</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">future</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">have_future</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1571,7 +1651,7 @@
             <span class="n">listener</span><span class="o">.</span><span class="n">on_add</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
 
         <span class="c1"># see if there are any pools to add or remove now that the host is marked up</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">update_created_pools</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">on_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
@@ -1581,7 +1661,7 @@
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Removing host </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
         <span class="n">host</span><span class="o">.</span><span class="n">set_down</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_manager</span><span class="o">.</span><span class="n">on_remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="n">session</span><span class="o">.</span><span class="n">on_remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">:</span>
             <span class="n">listener</span><span class="o">.</span><span class="n">on_remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
@@ -1641,7 +1721,7 @@
 <span class="sd">        If any host has fewer than the configured number of core connections</span>
 <span class="sd">        open, attempt to open connections until that number is met.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">_pools</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
                 <span class="n">pool</span><span class="o">.</span><span class="n">ensure_core_connections</span><span class="p">()</span>
 
@@ -1783,6 +1863,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">schema_metadata_enabled</span> <span class="o">=</span> <span class="n">enabled</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token_metadata_enabled</span> <span class="o">=</span> <span class="n">enabled</span></div>
 
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_send_chunks</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">set_keyspace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ks_chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">query_string</span><span class="p">,</span>
+                                       <span class="n">keyspace</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">keyspace</span> <span class="k">if</span> <span class="n">set_keyspace</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ks_chunk</span><span class="p">]</span>
+            <span class="c1"># TODO: make this timeout configurable somehow?</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">wait_for_responses</span><span class="p">(</span><span class="o">*</span><span class="n">messages</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">fail_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">success</span><span class="p">,</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Got unexpected response when preparing &quot;</span>
+                              <span class="s2">&quot;statement on host </span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_prepare_all_queries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reprepare_on_up</span><span class="p">:</span>
             <span class="k">return</span>
@@ -1792,24 +1885,23 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_factory</span><span class="p">(</span><span class="n">host</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
             <span class="n">statements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">keyspace</span><span class="p">,</span> <span class="n">ks_statements</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">statements</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">keyspace</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">keyspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">connection</span><span class="o">.</span><span class="n">set_keyspace_blocking</span><span class="p">(</span><span class="n">keyspace</span><span class="p">)</span>
-
-                <span class="c1"># prepare 10 statements at a time</span>
-                <span class="n">ks_statements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ProtocolVersion</span><span class="o">.</span><span class="n">uses_keyspace_flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span><span class="p">):</span>
+                <span class="c1"># V5 protocol and higher, no need to set the keyspace</span>
                 <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">),</span> <span class="mi">10</span><span class="p">):</span>
-                    <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">statements</span><span class="p">),</span> <span class="mi">10</span><span class="p">):</span>
+                    <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statements</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_send_chunks</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">keyspace</span><span class="p">,</span> <span class="n">ks_statements</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">statements</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">keyspace</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">keyspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">connection</span><span class="o">.</span><span class="n">set_keyspace_blocking</span><span class="p">(</span><span class="n">keyspace</span><span class="p">)</span>
 
-                <span class="k">for</span> <span class="n">ks_chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
-                    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span><span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">query_string</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ks_chunk</span><span class="p">]</span>
-                    <span class="c1"># TODO: make this timeout configurable somehow?</span>
-                    <span class="n">responses</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">wait_for_responses</span><span class="p">(</span><span class="o">*</span><span class="n">messages</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">fail_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">success</span><span class="p">,</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
-                            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Got unexpected response when preparing &quot;</span>
-                                      <span class="s2">&quot;statement on host </span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+                    <span class="c1"># prepare 10 statements at a time</span>
+                    <span class="n">ks_statements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">)</span>
+                    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">),</span> <span class="mi">10</span><span class="p">):</span>
+                        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_statements</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_send_chunks</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">chunks</span><span class="p">)</span>
 
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done preparing all known prepared statements against host </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">OperationTimedOut</span> <span class="k">as</span> <span class="n">timeout</span><span class="p">:</span>
@@ -1977,7 +2069,7 @@
 <span class="sd">    increasing timestamps across clusters, or set it to to ``lambda:</span>
 <span class="sd">    int(time.time() * 1e6)`` if losing records over clock inconsistencies is</span>
 <span class="sd">    acceptable for the application. Custom :attr:`timestamp_generator` s should</span>
-<span class="sd">    be callable, and calling them should return an integer representing seconds</span>
+<span class="sd">    be callable, and calling them should return an integer representing microseconds</span>
 <span class="sd">    since some point in time, typically UNIX epoch.</span>
 
 <span class="sd">    .. versionadded:: 3.8.0</span>
@@ -2188,26 +2280,30 @@
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">SimpleStatement</span><span class="p">):</span>
             <span class="n">query_string</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">query_string</span>
+            <span class="n">statement_keyspace</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">keyspace</span> <span class="k">if</span> <span class="n">ProtocolVersion</span><span class="o">.</span><span class="n">uses_keyspace_flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">parameters</span><span class="p">:</span>
                 <span class="n">query_string</span> <span class="o">=</span> <span class="n">bind_params</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">)</span>
             <span class="n">message</span> <span class="o">=</span> <span class="n">QueryMessage</span><span class="p">(</span>
                 <span class="n">query_string</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="n">serial_cl</span><span class="p">,</span>
-                <span class="n">fetch_size</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">)</span>
+                <span class="n">fetch_size</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
+                <span class="n">keyspace</span><span class="o">=</span><span class="n">statement_keyspace</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">BoundStatement</span><span class="p">):</span>
             <span class="n">prepared_statement</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">prepared_statement</span>
             <span class="n">message</span> <span class="o">=</span> <span class="n">ExecuteMessage</span><span class="p">(</span>
                 <span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_id</span><span class="p">,</span> <span class="n">query</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span>
                 <span class="n">serial_cl</span><span class="p">,</span> <span class="n">fetch_size</span><span class="p">,</span>
-                <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">skip_meta</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata</span><span class="p">))</span>
+                <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">skip_meta</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata</span><span class="p">),</span>
+                <span class="n">result_metadata_id</span><span class="o">=</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata_id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">BatchStatement</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">UnsupportedOperation</span><span class="p">(</span>
                     <span class="s2">&quot;BatchStatement execution is only supported with protocol version &quot;</span>
                     <span class="s2">&quot;2 or higher (supported in Cassandra 2.0 and higher).  Consider &quot;</span>
                     <span class="s2">&quot;setting Cluster.protocol_version to 2 to support this operation.&quot;</span><span class="p">)</span>
+            <span class="n">statement_keyspace</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">keyspace</span> <span class="k">if</span> <span class="n">ProtocolVersion</span><span class="o">.</span><span class="n">uses_keyspace_flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
             <span class="n">message</span> <span class="o">=</span> <span class="n">BatchMessage</span><span class="p">(</span>
                 <span class="n">query</span><span class="o">.</span><span class="n">batch_type</span><span class="p">,</span> <span class="n">query</span><span class="o">.</span><span class="n">_statements_and_parameters</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span>
-                <span class="n">serial_cl</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+                <span class="n">serial_cl</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">statement_keyspace</span><span class="p">)</span>
 
         <span class="n">message</span><span class="o">.</span><span class="n">tracing</span> <span class="o">=</span> <span class="n">trace</span>
 
@@ -2276,7 +2372,7 @@
         <span class="k">for</span> <span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_init_callbacks</span><span class="p">:</span>
             <span class="n">fn</span><span class="p">(</span><span class="n">response_future</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Session.prepare"><a class="viewcode-back" href="../../api/cassandra/cluster.html#cassandra.cluster.Session.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">custom_payload</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Session.prepare"><a class="viewcode-back" href="../../api/cassandra/cluster.html#cassandra.cluster.Session.prepare">[docs]</a>    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">custom_payload</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keyspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepares a query string, returning a :class:`~cassandra.query.PreparedStatement`</span>
 <span class="sd">        instance which can be used as follows::</span>
@@ -2299,24 +2395,36 @@
 <span class="sd">            ...     bound = prepared.bind((user.id, user.name, user.age))</span>
 <span class="sd">            ...     session.execute(bound)</span>
 
+<span class="sd">        Alternatively, if :attr:`~.Cluster.protocol_version` is 5 or higher</span>
+<span class="sd">        (requires Cassandra 4.0+), the keyspace can be specified as a</span>
+<span class="sd">        parameter. This will allow you to avoid specifying the keyspace in the</span>
+<span class="sd">        query without specifying a keyspace in :meth:`~.Cluster.connect`. It</span>
+<span class="sd">        even will let you prepare and use statements against a keyspace other</span>
+<span class="sd">        than the one originally specified on connection:</span>
+
+<span class="sd">            &gt;&gt;&gt; analyticskeyspace_prepared = session.prepare(</span>
+<span class="sd">            ...     &quot;INSERT INTO user_activity id, last_activity VALUES (?, ?)&quot;,</span>
+<span class="sd">            ...     keyspace=&quot;analyticskeyspace&quot;)  # note the different keyspace</span>
+
 <span class="sd">        **Important**: PreparedStatements should be prepared only once.</span>
 <span class="sd">        Preparing the same query more than once will likely affect performance.</span>
 
 <span class="sd">        `custom_payload` is a key value map to be passed along with the prepare</span>
 <span class="sd">        message. See :ref:`custom_payload`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">keyspace</span><span class="o">=</span><span class="n">keyspace</span><span class="p">)</span>
         <span class="n">future</span> <span class="o">=</span> <span class="n">ResponseFuture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_timeout</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">future</span><span class="o">.</span><span class="n">send_request</span><span class="p">()</span>
-            <span class="n">query_id</span><span class="p">,</span> <span class="n">bind_metadata</span><span class="p">,</span> <span class="n">pk_indexes</span><span class="p">,</span> <span class="n">result_metadata</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">query_id</span><span class="p">,</span> <span class="n">bind_metadata</span><span class="p">,</span> <span class="n">pk_indexes</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span> <span class="n">result_metadata_id</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error preparing query:&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
+        <span class="n">prepared_keyspace</span> <span class="o">=</span> <span class="n">keyspace</span> <span class="k">if</span> <span class="n">keyspace</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">prepared_statement</span> <span class="o">=</span> <span class="n">PreparedStatement</span><span class="o">.</span><span class="n">from_message</span><span class="p">(</span>
             <span class="n">query_id</span><span class="p">,</span> <span class="n">bind_metadata</span><span class="p">,</span> <span class="n">pk_indexes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyspace</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span> <span class="n">result_metadata_id</span><span class="p">)</span>
         <span class="n">prepared_statement</span><span class="o">.</span><span class="n">custom_payload</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">custom_payload</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">add_prepared</span><span class="p">(</span><span class="n">query_id</span><span class="p">,</span> <span class="n">prepared_statement</span><span class="p">)</span>
@@ -2324,13 +2432,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">prepare_on_all_hosts</span><span class="p">:</span>
             <span class="n">host</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">_current_host</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_on_all_hosts</span><span class="p">(</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_string</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_on_all_hosts</span><span class="p">(</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_string</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error preparing query on all hosts:&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">prepared_statement</span></div>
 
-    <span class="k">def</span> <span class="nf">prepare_on_all_hosts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">excluded_host</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">prepare_on_all_hosts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">excluded_host</span><span class="p">,</span> <span class="n">keyspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepare the given query on all hosts, excluding ``excluded_host``.</span>
 <span class="sd">        Intended for internal use only.</span>
@@ -2338,7 +2446,8 @@
         <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pools</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="k">if</span> <span class="n">host</span> <span class="o">!=</span> <span class="n">excluded_host</span> <span class="ow">and</span> <span class="n">host</span><span class="o">.</span><span class="n">is_up</span><span class="p">:</span>
-                <span class="n">future</span> <span class="o">=</span> <span class="n">ResponseFuture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_timeout</span><span class="p">)</span>
+                <span class="n">future</span> <span class="o">=</span> <span class="n">ResponseFuture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">keyspace</span><span class="o">=</span><span class="n">keyspace</span><span class="p">),</span>
+                                            <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_timeout</span><span class="p">)</span>
 
                 <span class="c1"># we don&#39;t care about errors preparing against specific hosts,</span>
                 <span class="c1"># since we can always prepare them as needed when the prepared</span>
@@ -2726,7 +2835,13 @@
 <span class="sd">        a connection to that host.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">errors</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cluster</span><span class="o">.</span><span class="n">_default_load_balancing_policy</span><span class="o">.</span><span class="n">make_query_plan</span><span class="p">():</span>
+        <span class="n">lbp</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cluster</span><span class="o">.</span><span class="n">load_balancing_policy</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cluster</span><span class="o">.</span><span class="n">_config_mode</span> <span class="o">==</span> <span class="n">_ConfigMode</span><span class="o">.</span><span class="n">LEGACY</span> <span class="k">else</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cluster</span><span class="o">.</span><span class="n">_default_load_balancing_policy</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">lbp</span><span class="o">.</span><span class="n">make_query_plan</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_connect</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ConnectionException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
@@ -3435,6 +3550,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_on_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_req_id</span><span class="p">)</span>
+        <span class="c1"># This prevents the race condition of the</span>
+        <span class="c1"># event loop thread just receiving the waited message</span>
+        <span class="c1"># If it arrives after this, it will be ignored</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">pool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">_pools</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_host</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pool</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pool</span><span class="o">.</span><span class="n">is_shutdown</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">request_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_req_id</span><span class="p">)</span>
+
+            <span class="n">pool</span><span class="o">.</span><span class="n">return_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">)</span>
+
         <span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">errors</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_schema_agreed</span><span class="p">:</span>
@@ -3699,7 +3830,8 @@
 
                     <span class="n">current_keyspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">keyspace</span>
                     <span class="n">prepared_keyspace</span> <span class="o">=</span> <span class="n">prepared_statement</span><span class="o">.</span><span class="n">keyspace</span>
-                    <span class="k">if</span> <span class="n">prepared_keyspace</span> <span class="ow">and</span> <span class="n">current_keyspace</span> <span class="o">!=</span> <span class="n">prepared_keyspace</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">ProtocolVersion</span><span class="o">.</span><span class="n">uses_keyspace_flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">protocol_version</span><span class="p">)</span> \
+                            <span class="ow">and</span> <span class="n">prepared_keyspace</span>  <span class="ow">and</span> <span class="n">current_keyspace</span> <span class="o">!=</span> <span class="n">prepared_keyspace</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_set_final_exception</span><span class="p">(</span>
                             <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The Session&#39;s current keyspace (</span><span class="si">%s</span><span class="s2">) does &quot;</span>
                                        <span class="s2">&quot;not match the keyspace the statement was &quot;</span>
@@ -3709,7 +3841,10 @@
 
                     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Re-preparing unrecognized prepared statement against host </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                               <span class="n">host</span><span class="p">,</span> <span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_string</span><span class="p">)</span>
-                    <span class="n">prepare_message</span> <span class="o">=</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_string</span><span class="p">)</span>
+                    <span class="n">prepared_keyspace</span> <span class="o">=</span> <span class="n">prepared_statement</span><span class="o">.</span><span class="n">keyspace</span> \
+                        <span class="k">if</span> <span class="n">ProtocolVersion</span><span class="o">.</span><span class="n">uses_keyspace_flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">protocol_version</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="n">prepare_message</span> <span class="o">=</span> <span class="n">PrepareMessage</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">query_string</span><span class="p">,</span>
+                                                     <span class="n">keyspace</span><span class="o">=</span><span class="n">prepared_keyspace</span><span class="p">)</span>
                     <span class="c1"># since this might block, run on the executor to avoid hanging</span>
                     <span class="c1"># the event loop thread</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reprepare</span><span class="p">,</span> <span class="n">prepare_message</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
@@ -3779,8 +3914,11 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepared_statement</span><span class="p">:</span>
                     <span class="c1"># result metadata is the only thing that could have</span>
                     <span class="c1"># changed from an alter</span>
-                    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">result_metadata</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata</span> <span class="o">=</span> <span class="n">result_metadata</span>
+                    <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata</span><span class="p">,</span>
+                     <span class="n">new_metadata_id</span><span class="p">)</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">results</span>
+                    <span class="k">if</span> <span class="n">new_metadata_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">prepared_statement</span><span class="o">.</span><span class="n">result_metadata_id</span> <span class="o">=</span> <span class="n">new_metadata_id</span>
 
                 <span class="c1"># use self._query to re-use the same host and</span>
                 <span class="c1"># at the same time properly borrow the connection</span>
@@ -4244,7 +4382,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" >cassandra</a> &#187;</li> 
       </ul>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.cluster - Clusters and Sessions &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.cluster - Clusters and Sessions &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="../cassandra.html" title="cassandra - Exceptions and Enums"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">API Documentation</a> &#187;</li> 
       </ul>
     </div>
@@ -113,6 +113,10 @@ extablishing connection pools or refreshing metadata.</p>
 local_dc set (as is the default), the DC is chosen from an arbitrary
 host in contact_points. In this case, contact_points should contain
 only nodes from a single, local DC.</p>
+<p>Note: In the next major version, if you specify contact points, you will
+also be required to also explicitly specify a load-balancing policy. This
+change will help prevent cases where users had hard-to-debug issues
+surrounding unintuitive default load-balancing policy behavior.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -654,7 +658,7 @@ topology changes or schema updates.</p>
 
 <dl class="class">
 <dt id="cassandra.cluster.ExecutionProfile">
-<em class="property">class </em><code class="descclassname">cassandra.cluster.</code><code class="descname">ExecutionProfile</code><span class="sig-paren">(</span><em>load_balancing_policy=None</em>, <em>retry_policy=None</em>, <em>consistency_level=10</em>, <em>serial_consistency_level=None</em>, <em>request_timeout=10.0</em>, <em>row_factory=&lt;function named_tuple_factory&gt;</em>, <em>speculative_execution_policy=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cassandra/cluster.html#ExecutionProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cluster.ExecutionProfile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cassandra.cluster.</code><code class="descname">ExecutionProfile</code><span class="sig-paren">(</span><em>load_balancing_policy=&lt;object object&gt;</em>, <em>retry_policy=None</em>, <em>consistency_level=10</em>, <em>serial_consistency_level=None</em>, <em>request_timeout=10.0</em>, <em>row_factory=&lt;function named_tuple_factory&gt;</em>, <em>speculative_execution_policy=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cassandra/cluster.html#ExecutionProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cluster.ExecutionProfile" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="cassandra.cluster.ExecutionProfile.load_balancing_policy">
 <code class="descname">load_balancing_policy</code><em class="property"> = None</em><a class="headerlink" href="#cassandra.cluster.ExecutionProfile.load_balancing_policy" title="Permalink to this definition">¶</a></dt>
@@ -830,7 +834,7 @@ example, an application could share a timestamp generator across
 increasing timestamps across clusters, or set it to to <code class="docutils literal"><span class="pre">lambda:</span>
 <span class="pre">int(time.time()</span> <span class="pre">*</span> <span class="pre">1e6)</span></code> if losing records over clock inconsistencies is
 acceptable for the application. Custom <a class="reference internal" href="#cassandra.cluster.Session.timestamp_generator" title="cassandra.cluster.Session.timestamp_generator"><code class="xref py py-attr docutils literal"><span class="pre">timestamp_generator</span></code></a> s should
-be callable, and calling them should return an integer representing seconds
+be callable, and calling them should return an integer representing microseconds
 since some point in time, typically UNIX epoch.</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 3.8.0.</span></p>
@@ -959,6 +963,17 @@ instance which can be used as follows:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">bound</span> <span class="o">=</span> <span class="n">prepared</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">age</span><span class="p">))</span>
 <span class="gp">... </span>    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, if <a class="reference internal" href="#cassandra.cluster.Cluster.protocol_version" title="cassandra.cluster.Cluster.protocol_version"><code class="xref py py-attr docutils literal"><span class="pre">protocol_version</span></code></a> is 5 or higher
+(requires Cassandra 4.0+), the keyspace can be specified as a
+parameter. This will allow you to avoid specifying the keyspace in the
+query without specifying a keyspace in <a class="reference internal" href="#cassandra.cluster.Cluster.connect" title="cassandra.cluster.Cluster.connect"><code class="xref py py-meth docutils literal"><span class="pre">connect()</span></code></a>. It
+even will let you prepare and use statements against a keyspace other
+than the one originally specified on connection:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">analyticskeyspace_prepared</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;INSERT INTO user_activity id, last_activity VALUES (?, ?)&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">keyspace</span><span class="o">=</span><span class="s2">&quot;analyticskeyspace&quot;</span><span class="p">)</span>  <span class="c1"># note the different keyspace</span>
 </pre></div>
 </div>
 <p><strong>Important</strong>: PreparedStatements should be prepared only once.
@@ -1342,7 +1357,7 @@ against.</p>
         <li class="right" >
           <a href="../cassandra.html" title="cassandra - Exceptions and Enums"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >API Documentation</a> &#187;</li> 
       </ul>
     </div>

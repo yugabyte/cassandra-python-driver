@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.query &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.query &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" accesskey="U">cassandra</a> &#187;</li> 
       </ul>
@@ -457,12 +457,13 @@
     <span class="n">query_id</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">query_string</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">result_metadata</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">result_metadata_id</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">routing_key_indexes</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_routing_key_index_set</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">serial_consistency_level</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_metadata</span><span class="p">,</span> <span class="n">query_id</span><span class="p">,</span> <span class="n">routing_key_indexes</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span>
-                 <span class="n">keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">):</span>
+                 <span class="n">keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span> <span class="n">result_metadata_id</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">column_metadata</span> <span class="o">=</span> <span class="n">column_metadata</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_id</span> <span class="o">=</span> <span class="n">query_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">routing_key_indexes</span> <span class="o">=</span> <span class="n">routing_key_indexes</span>
@@ -470,13 +471,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">keyspace</span> <span class="o">=</span> <span class="n">keyspace</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">protocol_version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_metadata</span> <span class="o">=</span> <span class="n">result_metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_metadata_id</span> <span class="o">=</span> <span class="n">result_metadata_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_idempotent</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_message</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">query_id</span><span class="p">,</span> <span class="n">column_metadata</span><span class="p">,</span> <span class="n">pk_indexes</span><span class="p">,</span> <span class="n">cluster_metadata</span><span class="p">,</span>
-                     <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">):</span>
+                     <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span>
+                     <span class="n">result_metadata_id</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">column_metadata</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">PreparedStatement</span><span class="p">(</span><span class="n">column_metadata</span><span class="p">,</span> <span class="n">query_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PreparedStatement</span><span class="p">(</span><span class="n">column_metadata</span><span class="p">,</span> <span class="n">query_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span> <span class="n">result_metadata_id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">pk_indexes</span><span class="p">:</span>
             <span class="n">routing_key_indexes</span> <span class="o">=</span> <span class="n">pk_indexes</span>
@@ -501,7 +504,8 @@
                         <span class="k">pass</span>          <span class="c1"># statement; just leave routing_key_indexes as None</span>
 
         <span class="k">return</span> <span class="n">PreparedStatement</span><span class="p">(</span><span class="n">column_metadata</span><span class="p">,</span> <span class="n">query_id</span><span class="p">,</span> <span class="n">routing_key_indexes</span><span class="p">,</span>
-                                 <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">)</span>
+                                 <span class="n">query</span><span class="p">,</span> <span class="n">prepared_keyspace</span><span class="p">,</span> <span class="n">protocol_version</span><span class="p">,</span> <span class="n">result_metadata</span><span class="p">,</span>
+                                 <span class="n">result_metadata_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PreparedStatement.bind"><a class="viewcode-back" href="../../api/cassandra/query.html#cassandra.cluster.PreparedStatement.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1113,7 +1117,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" >cassandra</a> &#187;</li> 
       </ul>

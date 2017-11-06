@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.policies - Load balancing and Failure Handling Policies &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.policies - Load balancing and Failure Handling Policies &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="cluster.html" title="cassandra.cluster - Clusters and Sessions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">API Documentation</a> &#187;</li> 
       </ul>
     </div>
@@ -219,10 +219,7 @@ By default, all remote hosts are ignored.</p>
 <dl class="class">
 <dt id="cassandra.policies.WhiteListRoundRobinPolicy">
 <em class="property">class </em><code class="descclassname">cassandra.policies.</code><code class="descname">WhiteListRoundRobinPolicy</code><span class="sig-paren">(</span><em>hosts</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cassandra/policies.html#WhiteListRoundRobinPolicy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.policies.WhiteListRoundRobinPolicy" title="Permalink to this definition">¶</a></dt>
-<dd><p><b><code>WhiteListRoundRobinPolicy</code></b> <strong>is deprecated. It will be removed in 4.0.</strong> It can effectively be
-reimplemented using <a class="reference internal" href="#cassandra.policies.HostFilterPolicy" title="cassandra.policies.HostFilterPolicy"><code class="xref py py-class docutils literal"><span class="pre">HostFilterPolicy</span></code></a>. For more information, see
-<a class="reference external" href="https://datastax-oss.atlassian.net/browse/PYTHON-758">PYTHON-758</a>.</p>
-<p>A subclass of <a class="reference internal" href="#cassandra.policies.RoundRobinPolicy" title="cassandra.policies.RoundRobinPolicy"><code class="xref py py-class docutils literal"><span class="pre">RoundRobinPolicy</span></code></a> which evenly
+<dd><p>A subclass of <a class="reference internal" href="#cassandra.policies.RoundRobinPolicy" title="cassandra.policies.RoundRobinPolicy"><code class="xref py py-class docutils literal"><span class="pre">RoundRobinPolicy</span></code></a> which evenly
 distributes queries across all nodes in the cluster,
 regardless of what datacenter the nodes may be in, but
 only if that node exists in the list of allowed nodes</p>
@@ -508,6 +505,20 @@ internally before a BATCH write.</p>
 <dd><p>A lighweight-transaction write, such as &#8220;DELETE ... IF EXISTS&#8221;.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="cassandra.policies.WriteType.VIEW">
+<code class="descname">VIEW</code><em class="property"> = 6</em><a class="headerlink" href="#cassandra.policies.WriteType.VIEW" title="Permalink to this definition">¶</a></dt>
+<dd><p>This WriteType is only seen in results for requests that were unable to
+complete MV operations.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cassandra.policies.WriteType.CDC">
+<code class="descname">CDC</code><em class="property"> = 7</em><a class="headerlink" href="#cassandra.policies.WriteType.CDC" title="Permalink to this definition">¶</a></dt>
+<dd><p>This WriteType is only seen in results for requests that were unable to
+complete CDC operations.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -734,7 +745,7 @@ than reading nothing, even if there is a risk of reading stale data.</p>
         <li class="right" >
           <a href="cluster.html" title="cassandra.cluster - Clusters and Sessions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >API Documentation</a> &#187;</li> 
       </ul>
     </div>

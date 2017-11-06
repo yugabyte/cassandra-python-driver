@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>cassandra.policies &#8212; Cassandra Driver 3.11.0 documentation</title>
+    <title>cassandra.policies &#8212; Cassandra Driver 3.12.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.11.0',
+        VERSION:     '3.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" accesskey="U">cassandra</a> &#187;</li> 
       </ul>
@@ -82,7 +82,6 @@
 <span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">shuffle</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Lock</span>
 <span class="kn">import</span> <span class="nn">socket</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
 
 <span class="kn">from</span> <span class="nn">cassandra</span> <span class="k">import</span> <span class="n">ConsistencyLevel</span><span class="p">,</span> <span class="n">OperationTimedOut</span>
 
@@ -462,10 +461,6 @@
 
 <div class="viewcode-block" id="WhiteListRoundRobinPolicy"><a class="viewcode-back" href="../../api/cassandra/policies.html#cassandra.cluster.WhiteListRoundRobinPolicy">[docs]</a><span class="k">class</span> <span class="nc">WhiteListRoundRobinPolicy</span><span class="p">(</span><span class="n">RoundRobinPolicy</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    |wlrrp| **is deprecated. It will be removed in 4.0.** It can effectively be</span>
-<span class="sd">    reimplemented using :class:`.HostFilterPolicy`. For more information, see</span>
-<span class="sd">    PYTHON-758_.</span>
-
 <span class="sd">    A subclass of :class:`.RoundRobinPolicy` which evenly</span>
 <span class="sd">    distributes queries across all nodes in the cluster,</span>
 <span class="sd">    regardless of what datacenter the nodes may be in, but</span>
@@ -475,26 +470,13 @@
 <span class="sd">    https://datastax-oss.atlassian.net/browse/JAVA-145</span>
 <span class="sd">    Where connection errors occur when connection</span>
 <span class="sd">    attempts are made to private IP addresses remotely</span>
-
-<span class="sd">    .. |wlrrp| raw:: html</span>
-
-<span class="sd">       &lt;b&gt;&lt;code&gt;WhiteListRoundRobinPolicy&lt;/code&gt;&lt;/b&gt;</span>
-
-<span class="sd">    .. _PYTHON-758: https://datastax-oss.atlassian.net/browse/PYTHON-758</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hosts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The `hosts` parameter should be a sequence of hosts to permit</span>
 <span class="sd">        connections to.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;WhiteListRoundRobinPolicy is deprecated. &#39;</span>
-               <span class="s1">&#39;It will be removed in 4.0. &#39;</span>
-               <span class="s1">&#39;It can effectively be reimplemented using HostFilterPolicy.&#39;</span><span class="p">)</span>
-        <span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
-        <span class="c1"># DeprecationWarnings are silent by default so we also log the message</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_hosts</span> <span class="o">=</span> <span class="n">hosts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_hosts_resolved</span> <span class="o">=</span> <span class="p">[</span><span class="n">endpoint</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allowed_hosts</span>
                                         <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="n">socket</span><span class="o">.</span><span class="n">getaddrinfo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">AF_UNSPEC</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)]</span>
@@ -812,6 +794,18 @@
     <span class="n">CAS</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A lighweight-transaction write, such as &quot;DELETE ... IF EXISTS&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">VIEW</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This WriteType is only seen in results for requests that were unable to</span>
+<span class="sd">    complete MV operations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CDC</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This WriteType is only seen in results for requests that were unable to</span>
+<span class="sd">    complete CDC operations.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -821,7 +815,9 @@
     <span class="s1">&#39;UNLOGGED_BATCH&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">UNLOGGED_BATCH</span><span class="p">,</span>
     <span class="s1">&#39;COUNTER&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">COUNTER</span><span class="p">,</span>
     <span class="s1">&#39;BATCH_LOG&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">BATCH_LOG</span><span class="p">,</span>
-    <span class="s1">&#39;CAS&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">CAS</span>
+    <span class="s1">&#39;CAS&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">CAS</span><span class="p">,</span>
+    <span class="s1">&#39;VIEW&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">VIEW</span><span class="p">,</span>
+    <span class="s1">&#39;CDC&#39;</span><span class="p">:</span> <span class="n">WriteType</span><span class="o">.</span><span class="n">CDC</span>
 <span class="p">}</span>
 
 
@@ -1190,7 +1186,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.11.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cassandra.html" >cassandra</a> &#187;</li> 
       </ul>
