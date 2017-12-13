@@ -188,7 +188,10 @@ class LargeDataTests(unittest.TestCase):
         # Table creation
         table = 'wide_byte_rows'
         session = self.make_session_and_keyspace()
+        previous_cl = session.default_consistency_level
+        session.default_consistency_level = ConsistencyLevel.ALL
         session.execute('CREATE TABLE %s (k INT, i INT, v BLOB, PRIMARY KEY(k, i))' % table)
+        session.default_consistency_level = previous_cl
 
         # Prepare statement and run insertions
         to_insert = 100000

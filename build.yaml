@@ -10,7 +10,7 @@ schedules:
         - python: [3.4, 3.6]
 
   commit_branches:
-    schedule: per_commit
+    schedule: 0 2 * * *
     branches:
       include: [/python.*/]
     env_vars: |
@@ -18,7 +18,6 @@ schedules:
     matrix:
       exclude:
         - python: [3.4, 3.6]
-        - cassandra: ['2.0', '2.1', '3.0']
 
   weekly_libev:
     schedule: 0 10 * * 6
