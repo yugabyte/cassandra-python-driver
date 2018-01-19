@@ -69,8 +69,11 @@ class AsyncioTimer(object):
 
 class AsyncioConnection(Connection):
     """
-    An implementation of :class:`.Connection` that uses the ``asyncio`` module
-    in the Python standard library for its event loop.
+    An experimental implementation of :class:`.Connection` that uses the
+    ``asyncio`` module in the Python standard library for its event loop.
+
+    Note that it requires ``asyncio`` features that were only introduced in the
+    3.4 line in 3.4.6, and in the 3.5 line in 3.5.1.
     """
 
     _loop = None
