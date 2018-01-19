@@ -17,6 +17,15 @@ log = logging.getLogger(__name__)
 # https://www.python.org/dev/peps/pep-0492/#coroutine-objects
 
 
+try:
+    asyncio.run_coroutine_threadsafe
+except AttributeError:
+    raise ImportError(
+        'Cannot use asyncioreactor without access to '
+        'asyncio.run_coroutine_threadsafe (added in 3.4.6 and 3.5.1)'
+    )
+
+
 class AsyncioTimer(object):
     """
     An ``asyncioreactor``-specific Timer. Similar to :class:`.connection.Timer,
