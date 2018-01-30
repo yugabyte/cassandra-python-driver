@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Connections (experimental) &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Connections &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,85 +24,28 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Third party integrations" href="third_party.html" />
-    <link rel="prev" title="Batch Queries" href="batches.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="third_party.html" title="Third party integrations"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="batches.html" title="Batch Queries"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../object_mapper.html" accesskey="U">Object Mapper</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Connections (experimental)</a><ul>
-<li><a class="reference internal" href="#register-a-new-connection">Register a new connection</a></li>
-<li><a class="reference internal" href="#change-the-default-connection">Change the default connection</a></li>
-<li><a class="reference internal" href="#unregister-a-connection">Unregister a connection</a></li>
-<li><a class="reference internal" href="#management">Management</a></li>
-<li><a class="reference internal" href="#connection-selection">Connection Selection</a><ul>
-<li><a class="reference internal" href="#default-model-connection">Default Model Connection</a></li>
-<li><a class="reference internal" href="#queryset-and-model-instance">QuerySet and model instance</a></li>
-<li><a class="reference internal" href="#context-manager">Context Manager</a></li>
-<li><a class="reference internal" href="#batchquery">BatchQuery</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Batch Queries" href="batches.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="batches.html"
-                        title="previous chapter">Batch Queries</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="third_party.html"
-                        title="next chapter">Third party integrations</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/cqlengine/connections.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="connections-experimental">
-<h1>Connections (experimental)<a class="headerlink" href="#connections-experimental" title="Permalink to this headline">¶</a></h1>
-<p>Connections are experimental and aimed to ease the use of multiple sessions with cqlengine. Connections can be set on a model class, per query or using a context manager.</p>
+  <div class="section" id="connections">
+<h1>Connections<a class="headerlink" href="#connections" title="Permalink to this headline">¶</a></h1>
+<p>Connections aim to ease the use of multiple sessions with cqlengine. Connections can be set on a model class, per query or using a context manager.</p>
 <div class="section" id="register-a-new-connection">
 <h2>Register a new connection<a class="headerlink" href="#register-a-new-connection" title="Permalink to this headline">¶</a></h2>
-<p>To use cqlengine, you need at least a default connection. If you initialize cqlengine&#8217;s connections with with <a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.setup" title="cassandra.cqlengine.connection.setup"><code class="xref py py-func docutils literal"><span class="pre">connection.setup</span></code></a>, a connection will be created automatically. If you want to use another cluster/session, you need to register a new cqlengine connection. You register a connection with <a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.register_connection" title="cassandra.cqlengine.connection.register_connection"><code class="xref py py-func docutils literal"><span class="pre">register_connection()</span></code></a>:</p>
+<p>To use cqlengine, you need at least a default connection. If you initialize cqlengine’s connections with with <a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.setup" title="cassandra.cqlengine.connection.setup"><code class="xref py py-func docutils literal"><span class="pre">connection.setup</span></code></a>, a connection will be created automatically. If you want to use another cluster/session, you need to register a new cqlengine connection. You register a connection with <a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.register_connection" title="cassandra.cqlengine.connection.register_connection"><code class="xref py py-func docutils literal"><span class="pre">register_connection()</span></code></a>:</p>
 <blockquote>
 <div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cassandra.cqlengine</span> <span class="kn">import</span> <span class="n">connection</span>
 
@@ -114,7 +54,7 @@
 </pre></div>
 </div>
 </div></blockquote>
-<p><a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.register_connection" title="cassandra.cqlengine.connection.register_connection"><code class="xref py py-func docutils literal"><span class="pre">register_connection()</span></code></a> can take a list of hosts, as shown above, in which case it will create a connection with a new session. It can also take a <cite>session</cite> argument if you&#8217;ve already created a session:</p>
+<p><a class="reference internal" href="../api/cassandra/cqlengine/connection.html#cassandra.cqlengine.connection.register_connection" title="cassandra.cqlengine.connection.register_connection"><code class="xref py py-func docutils literal"><span class="pre">register_connection()</span></code></a> can take a list of hosts, as shown above, in which case it will create a connection with a new session. It can also take a <cite>session</cite> argument if you’ve already created a session:</p>
 <blockquote>
 <div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cassandra.cqlengine</span> <span class="kn">import</span> <span class="n">connection</span>
 <span class="kn">from</span> <span class="nn">cassandra.cluster</span> <span class="kn">import</span> <span class="n">Cluster</span>
@@ -236,30 +176,108 @@
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../object_mapper.html">Object Mapper</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../object_mapper.html#contents">Contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="upgrade_guide.html">Upgrade Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queryset.html">Making Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batches.html">Batch Queries</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Connections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#register-a-new-connection">Register a new connection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-the-default-connection">Change the default connection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unregister-a-connection">Unregister a connection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#management">Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connection-selection">Connection Selection</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#default-model-connection">Default Model Connection</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#queryset-and-model-instance">QuerySet and model instance</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#context-manager">Context Manager</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#batchquery">BatchQuery</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="third_party.html">Third party integrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../object_mapper.html#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../object_mapper.html">Object Mapper</a><ul>
+      <li>Previous: <a href="batches.html" title="previous chapter">Batch Queries</a></li>
+      <li>Next: <a href="third_party.html" title="next chapter">Third party integrations</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="third_party.html" title="Third party integrations"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="batches.html" title="Batch Queries"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../object_mapper.html" >Object Mapper</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cqlengine/connections.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

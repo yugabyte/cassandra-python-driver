@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>cassandra.cqlengine.query - Query and filter model objects &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>cassandra.cqlengine.query - Query and filter model objects &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,63 +24,16 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="cassandra.cqlengine.connection - Connection management for cqlengine" href="connection.html" />
-    <link rel="prev" title="cassandra.cqlengine.columns - Column types for object mapping models" href="columns.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="connection.html" title="cassandra.cqlengine.connection - Connection management for cqlengine"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="columns.html" title="cassandra.cqlengine.columns - Column types for object mapping models"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">API Documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a><ul>
-<li><a class="reference internal" href="#queryset">QuerySet</a></li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="cassandra.cqlengine.columns - Column types for object mapping models" href="columns.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="columns.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="connection.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.connection</span></code> - Connection management for cqlengine</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/api/cassandra/cqlengine/query.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -190,7 +140,7 @@ The methods here are used to filter, order, and constrain results.</p>
 <dt id="cassandra.cqlengine.query.ModelQuerySet.limit">
 <code class="descname">limit</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.limit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Limits the number of results returned by Cassandra. Use <em>0</em> or <em>None</em> to disable.</p>
-<p><em>Note that CQL&#8217;s default limit is 10,000, so all queries without a limit set explicitly will have an implicit limit of 10,000</em></p>
+<p><em>Note that CQL’s default limit is 10,000, so all queries without a limit set explicitly will have an implicit limit of 10,000</em></p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Fetch 100 users</span>
 <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="p">()</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -206,7 +156,7 @@ The methods here are used to filter, order, and constrain results.</p>
 <dt id="cassandra.cqlengine.query.ModelQuerySet.fetch_size">
 <code class="descname">fetch_size</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.fetch_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the number of rows that are fetched at a time.</p>
-<p><em>Note that driver&#8217;s default fetch size is 5000.</em></p>
+<p><em>Note that driver’s default fetch size is 5000.</em></p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="p">()</span><span class="o">.</span><span class="n">fetch_size</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 </pre></div>
@@ -217,21 +167,21 @@ The methods here are used to filter, order, and constrain results.</p>
 <dt id="cassandra.cqlengine.query.ModelQuerySet.if_not_exists">
 <code class="descname">if_not_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/query.html#ModelQuerySet.if_not_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.if_not_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the existence of an object before insertion.</p>
-<p>If the insertion isn&#8217;t applied, a LWTException is raised.</p>
+<p>If the insertion isn’t applied, a LWTException is raised.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="cassandra.cqlengine.query.ModelQuerySet.if_exists">
 <code class="descname">if_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/query.html#ModelQuerySet.if_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.if_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the existence of an object before an update or delete.</p>
-<p>If the update or delete isn&#8217;t applied, a LWTException is raised.</p>
+<p>If the update or delete isn’t applied, a LWTException is raised.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="cassandra.cqlengine.query.ModelQuerySet.order_by">
 <code class="descname">order_by</code><span class="sig-paren">(</span><em>*colnames</em><span class="sig-paren">)</span><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.order_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the column(s) to be used for ordering</p>
-<p>Default order is ascending, prepend a &#8216;-&#8216; to any column name for descending</p>
+<p>Default order is ascending, prepend a ‘-‘ to any column name for descending</p>
 <p><em>Note: column names must be a clustering key</em></p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid1</span><span class="p">,</span><span class="n">uuid4</span>
 
@@ -272,7 +222,7 @@ The methods here are used to filter, order, and constrain results.</p>
 <dl class="method">
 <dt id="cassandra.cqlengine.query.ModelQuerySet.defer">
 <code class="descname">defer</code><span class="sig-paren">(</span><em>fields</em><span class="sig-paren">)</span><a class="headerlink" href="#cassandra.cqlengine.query.ModelQuerySet.defer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Don&#8217;t load these fields for the returned query</p>
+<dd><p>Don’t load these fields for the returned query</p>
 </dd></dl>
 
 <dl class="method">
@@ -360,7 +310,7 @@ or remove items from the collection, without overwriting then entire column.</p>
 </div>
 <p><code class="xref py py-class docutils literal"><span class="pre">Map</span></code></p>
 <ul class="simple">
-<li><cite>update</cite>: adds the given keys/values to the columns, creating new entries if they didn&#8217;t exist, and overwriting old ones if they did</li>
+<li><cite>update</cite>: adds the given keys/values to the columns, creating new entries if they didn’t exist, and overwriting old ones if they did</li>
 </ul>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># add items to a map</span>
 <span class="n">Row</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">row_id</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">map_column__update</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
@@ -384,17 +334,17 @@ or remove items from the collection, without overwriting then entire column.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>batch_type</strong> (<em>str</em><em> or </em><em>None</em>) &#8211; (optional) One of batch type values available through BatchType enum</li>
-<li><strong>timestamp</strong> (<a class="reference internal" href="../query.html#cassandra.query.TraceEvent.datetime" title="cassandra.query.TraceEvent.datetime"><em>datetime</em></a><em> or </em><em>timedelta</em><em> or </em><em>None</em>) &#8211; (optional) A datetime or timedelta object with desired timestamp to be applied
+<li><strong>batch_type</strong> (<a class="reference internal" href="../query.html#cassandra.query.BatchType" title="cassandra.query.BatchType"><em>BatchType</em></a><em>, </em><em>str</em><em> or </em><em>None</em>) – (optional) One of batch type values available through BatchType enum</li>
+<li><strong>timestamp</strong> (<a class="reference internal" href="../query.html#cassandra.query.TraceEvent.datetime" title="cassandra.query.TraceEvent.datetime"><em>datetime</em></a><em> or </em><em>timedelta</em><em> or </em><em>None</em>) – (optional) A datetime or timedelta object with desired timestamp to be applied
 to the batch conditional.</li>
-<li><strong>consistency</strong> (The <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> to be used for the batch query, or None.) &#8211; (optional) One of consistency values (&#8220;ANY&#8221;, &#8220;ONE&#8221;, &#8220;QUORUM&#8221; etc)</li>
-<li><strong>execute_on_exception</strong> (<em>bool</em>) &#8211; (Defaults to False) Indicates that when the BatchQuery instance is used
+<li><strong>consistency</strong> (The <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> to be used for the batch query, or None.) – (optional) One of consistency values (“ANY”, “ONE”, “QUORUM” etc)</li>
+<li><strong>execute_on_exception</strong> (<em>bool</em>) – (Defaults to False) Indicates that when the BatchQuery instance is used
 as a context manager the queries accumulated within the context must be executed despite
 encountering an error within the context. By default, any exception raised from within
 the context scope will cause the batched queries not to be executed.</li>
-<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em>) &#8211; (optional) Timeout for the entire batch (in seconds), if not specified fallback
+<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em>) – (optional) Timeout for the entire batch (in seconds), if not specified fallback
 to default session timeout</li>
-<li><strong>connection</strong> (<em>str</em>) &#8211; Connection name to use for the batch execution</li>
+<li><strong>connection</strong> (<em>str</em>) – Connection name to use for the batch execution</li>
 </ul>
 </td>
 </tr>
@@ -416,15 +366,15 @@ to default session timeout</li>
 <dd><p>Add a function and arguments to be passed to it to be executed after the batch executes.</p>
 <p>A batch can support multiple callbacks.</p>
 <p>Note, that if the batch does not execute, the callbacks are not executed.
-A callback, thus, is an &#8220;on batch success&#8221; handler.</p>
+A callback, thus, is an “on batch success” handler.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>callable</em>) &#8211; Callable object</li>
-<li><strong>*args</strong> &#8211; Positional arguments to be passed to the callback at the time of execution</li>
-<li><strong>**kwargs</strong> &#8211; Named arguments to be passed to the callback at the time of execution</li>
+<li><strong>fn</strong> (<em>callable</em>) – Callable object</li>
+<li><strong>*args</strong> – Positional arguments to be passed to the callback at the time of execution</li>
+<li><strong>**kwargs</strong> – Named arguments to be passed to the callback at the time of execution</li>
 </ul>
 </td>
 </tr>
@@ -444,8 +394,8 @@ specifies a keyspace for model IO.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>*args</strong> &#8211; One or more models. A model should be a class type, not an instance.</li>
-<li><strong>**kwargs</strong> &#8211; (optional) Context parameters: can be <em>keyspace</em> or <em>connection</em></li>
+<li><strong>*args</strong> – One or more models. A model should be a class type, not an instance.</li>
+<li><strong>**kwargs</strong> – (optional) Context parameters: can be <em>keyspace</em> or <em>connection</em></li>
 </ul>
 </td>
 </tr>
@@ -488,7 +438,7 @@ available through the <code class="docutils literal"><span class="pre">existing<
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>existing</strong> &#8211; The current state of the data which prevented the write.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>existing</strong> – The current state of the data which prevented the write.</td>
 </tr>
 </tbody>
 </table>
@@ -501,30 +451,97 @@ available through the <code class="docutils literal"><span class="pre">existing<
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#core-driver">Core Driver</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#object-mapper">Object Mapper</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="models.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.models</span></code> - Table models for object mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="columns.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#queryset">QuerySet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="connection.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.connection</span></code> - Connection management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="management.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.management</span></code> - Schema management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usertype.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.usertype</span></code> - Model classes for User Defined Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Documentation</a><ul>
+      <li>Previous: <a href="columns.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a></li>
+      <li>Next: <a href="connection.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.connection</span></code> - Connection management for cqlengine</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="connection.html" title="cassandra.cqlengine.connection - Connection management for cqlengine"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="columns.html" title="cassandra.cqlengine.columns - Column types for object mapping models"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >API Documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../../_sources/api/cassandra/cqlengine/query.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

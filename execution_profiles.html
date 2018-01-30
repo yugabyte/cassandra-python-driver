@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Execution Profiles (experimental) &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Execution Profiles &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,83 +24,30 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Performance Notes" href="performance.html" />
-    <link rel="prev" title="Upgrading" href="upgrading.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="performance.html" title="Performance Notes"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="upgrading.html" title="Upgrading"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Execution Profiles (experimental)</a><ul>
-<li><a class="reference internal" href="#mapping-legacy-parameters-to-profiles">Mapping Legacy Parameters to Profiles</a></li>
-<li><a class="reference internal" href="#using-execution-profiles">Using Execution Profiles</a><ul>
-<li><a class="reference internal" href="#default">Default</a></li>
-<li><a class="reference internal" href="#initializing-cluster-with-profiles">Initializing cluster with profiles</a></li>
-<li><a class="reference internal" href="#adding-named-profiles">Adding named profiles</a></li>
-<li><a class="reference internal" href="#passing-a-profile-instance-without-mapping">Passing a profile instance without mapping</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Upgrading" href="upgrading.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="upgrading.html"
-                        title="previous chapter">Upgrading</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="performance.html"
-                        title="next chapter">Performance Notes</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/execution_profiles.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="execution-profiles-experimental">
-<h1>Execution Profiles (experimental)<a class="headerlink" href="#execution-profiles-experimental" title="Permalink to this headline">¶</a></h1>
-<p>Execution profiles are an experimental API aimed at making it easier to execute requests in different ways within
+  <div class="section" id="execution-profiles">
+<h1>Execution Profiles<a class="headerlink" href="#execution-profiles" title="Permalink to this headline">¶</a></h1>
+<p>Execution profiles aim at making it easier to execute requests in different ways within
 a single connected <code class="docutils literal"><span class="pre">Session</span></code>. Execution profiles are being introduced to deal with the exploding number of
 configuration options, especially as the database platform evolves more complex workloads.</p>
-<p>The Execution Profile API is being introduced now, in an experimental capacity, in order to take advantage of it in
-existing projects, and to gauge interest and feedback in the community. For now, the legacy configuration remains
-intact, but legacy and Execution Profile APIs cannot be used simultaneously on the same client <code class="docutils literal"><span class="pre">Cluster</span></code>.</p>
+<p>The legacy configuration remains intact, but legacy and Execution Profile APIs
+cannot be used simultaneously on the same client <code class="docutils literal"><span class="pre">Cluster</span></code>. Legacy configuration
+will be removed in the next major release (4.0).</p>
 <p>This document explains how Execution Profiles relate to existing settings, and shows how to use the new profiles for
 request execution.</p>
 <div class="section" id="mapping-legacy-parameters-to-profiles">
@@ -223,29 +167,90 @@ If reference objects are to be updated in the clone, one would typically set tho
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Execution Profiles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mapping-legacy-parameters-to-profiles">Mapping Legacy Parameters to Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-execution-profiles">Using Execution Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default">Default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initializing-cluster-with-profiles">Initializing cluster with profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-named-profiles">Adding named profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#passing-a-profile-instance-without-mapping">Passing a profile instance without mapping</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="upgrading.html" title="previous chapter">Upgrading</a></li>
+      <li>Next: <a href="performance.html" title="next chapter">Performance Notes</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="performance.html" title="Performance Notes"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="upgrading.html" title="Upgrading"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/execution_profiles.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>cassandra.io.eventletreactor - eventlet-compatible Connection &#8212; Cassandra Driver 3.13.0 documentation</title>
+    <title>cassandra.io.asyncioreactor - asyncio Event Loop &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,8 +23,8 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="cassandra.io.libevreactor - libev Event Loop" href="libevreactor.html" />
-    <link rel="prev" title="cassandra.io.asyncorereactor - asyncore Event Loop" href="asyncorereactor.html" />
+    <link rel="next" title="cassandra.io.asyncorereactor - asyncore Event Loop" href="asyncorereactor.html" />
+    <link rel="prev" title="cassandra.util - Utilities" href="../util.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -40,22 +40,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-cassandra.io.eventletreactor">
-<span id="cassandra-io-eventletreactor-eventlet-compatible-connection"></span><h1><code class="docutils literal"><span class="pre">cassandra.io.eventletreactor</span></code> - <code class="docutils literal"><span class="pre">eventlet</span></code>-compatible Connection<a class="headerlink" href="#module-cassandra.io.eventletreactor" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-cassandra.io.asyncioreactor">
+<span id="cassandra-io-asyncioreactor-asyncio-event-loop"></span><h1><code class="docutils literal"><span class="pre">cassandra.io.asyncioreactor</span></code> - <code class="docutils literal"><span class="pre">asyncio</span></code> Event Loop<a class="headerlink" href="#module-cassandra.io.asyncioreactor" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="cassandra.io.eventletreactor.EventletConnection">
-<em class="property">class </em><code class="descclassname">cassandra.io.eventletreactor.</code><code class="descname">EventletConnection</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/io/eventletreactor.html#EventletConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.io.eventletreactor.EventletConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>An implementation of <code class="xref py py-class docutils literal"><span class="pre">Connection</span></code> that utilizes <code class="docutils literal"><span class="pre">eventlet</span></code>.</p>
-<p>This implementation assumes all eventlet monkey patching is active. It is not tested with partial patching.</p>
-<dl class="classmethod">
-<dt id="cassandra.io.eventletreactor.EventletConnection.service_timeouts">
-<em class="property">classmethod </em><code class="descname">service_timeouts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/io/eventletreactor.html#EventletConnection.service_timeouts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.io.eventletreactor.EventletConnection.service_timeouts" title="Permalink to this definition">¶</a></dt>
-<dd><p>cls._timeout_watcher runs in this loop forever.
-It is usually waiting for the next timeout on the cls._new_timer Event.
-When new timers are added, that event is set so that the watcher can
-wake up and possibly set an earlier timeout.</p>
-</dd></dl>
-
+<dt id="cassandra.io.asyncioreactor.AsyncioConnection">
+<em class="property">class </em><code class="descclassname">cassandra.io.asyncioreactor.</code><code class="descname">AsyncioConnection</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/io/asyncioreactor.html#AsyncioConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.io.asyncioreactor.AsyncioConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>An experimental implementation of <code class="xref py py-class docutils literal"><span class="pre">Connection</span></code> that uses the
+<code class="docutils literal"><span class="pre">asyncio</span></code> module in the Python standard library for its event loop.</p>
+<p>Note that it requires <code class="docutils literal"><span class="pre">asyncio</span></code> features that were only introduced in the
+3.4 line in 3.4.6, and in the 3.5 line in 3.5.1.</p>
 </dd></dl>
 
 </div>
@@ -102,9 +95,9 @@ wake up and possibly set an earlier timeout.</p>
 <li class="toctree-l3"><a class="reference internal" href="../concurrent.html"><code class="docutils literal"><span class="pre">cassandra.concurrent</span></code> - Utilities for Concurrent Statement Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../connection.html"><code class="docutils literal"><span class="pre">cassandra.connection</span></code> - Low Level Connection Info</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../util.html"><code class="docutils literal"><span class="pre">cassandra.util</span></code> - Utilities</a></li>
-<li class="toctree-l3"><a class="reference internal" href="asyncioreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.asyncioreactor</span></code> - <code class="docutils literal"><span class="pre">asyncio</span></code> Event Loop</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.io.asyncioreactor</span></code> - <code class="docutils literal"><span class="pre">asyncio</span></code> Event Loop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="asyncorereactor.html"><code class="docutils literal"><span class="pre">cassandra.io.asyncorereactor</span></code> - <code class="docutils literal"><span class="pre">asyncore</span></code> Event Loop</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.io.eventletreactor</span></code> - <code class="docutils literal"><span class="pre">eventlet</span></code>-compatible Connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eventletreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.eventletreactor</span></code> - <code class="docutils literal"><span class="pre">eventlet</span></code>-compatible Connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="libevreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.libevreactor</span></code> - <code class="docutils literal"><span class="pre">libev</span></code> Event Loop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="geventreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.geventreactor</span></code> - <code class="docutils literal"><span class="pre">gevent</span></code>-compatible Event Loop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="twistedreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.twistedreactor</span></code> - Twisted Event Loop</a></li>
@@ -132,8 +125,8 @@ wake up and possibly set an earlier timeout.</p>
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../../index.html">API Documentation</a><ul>
-      <li>Previous: <a href="asyncorereactor.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.io.asyncorereactor</span></code> - <code class="docutils literal"><span class="pre">asyncore</span></code> Event Loop</a></li>
-      <li>Next: <a href="libevreactor.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.io.libevreactor</span></code> - <code class="docutils literal"><span class="pre">libev</span></code> Event Loop</a></li>
+      <li>Previous: <a href="../util.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.util</span></code> - Utilities</a></li>
+      <li>Next: <a href="asyncorereactor.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.io.asyncorereactor</span></code> - <code class="docutils literal"><span class="pre">asyncore</span></code> Event Loop</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -160,7 +153,7 @@ wake up and possibly set an earlier timeout.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
-      <a href="../../../_sources/api/cassandra/io/eventletreactor.rst.txt"
+      <a href="../../../_sources/api/cassandra/io/asyncioreactor.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

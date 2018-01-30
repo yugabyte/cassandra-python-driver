@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Python Cassandra Driver &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Python Cassandra Driver &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,58 +23,16 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Documentation" href="api/index.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api/index.html" title="API Documentation"
-             accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Python Cassandra Driver</a><ul>
-<li><a class="reference internal" href="#contents">Contents</a></li>
-<li><a class="reference internal" href="#getting-help">Getting Help</a></li>
-<li><a class="reference internal" href="#reporting-issues">Reporting Issues</a></li>
-</ul>
-</li>
-</ul>
+    <link rel="next" title="API Documentation" href="api/index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Next topic</h4>
-  <p class="topless"><a href="api/index.html"
-                        title="next chapter">API Documentation</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -88,7 +43,7 @@
 <h1>Python Cassandra Driver<a class="headerlink" href="#python-cassandra-driver" title="Permalink to this headline">¶</a></h1>
 <p>A Python client driver for <a class="reference external" href="http://cassandra.apache.org">Apache Cassandra</a>.
 This driver works exclusively with the Cassandra Query Language v3 (CQL3)
-and Cassandra&#8217;s native protocol.  Cassandra 2.1+ is supported.</p>
+and Cassandra’s native protocol.  Cassandra 2.1+ is supported.</p>
 <p>The driver supports Python 2.7, 3.3, 3.4, 3.5, and 3.6.</p>
 <p>This driver is open source under the
 <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache v2 License</a>.
@@ -107,7 +62,7 @@ The source code for this driver can be found on <a class="reference external" hr
 <dd>The API documentation.</dd>
 <dt><a class="reference internal" href="upgrading.html"><span class="doc">Upgrading</span></a></dt>
 <dd>A guide to upgrading versions of the driver</dd>
-<dt><a class="reference internal" href="execution_profiles.html"><span class="doc">Execution Profiles (experimental)</span></a></dt>
+<dt><a class="reference internal" href="execution_profiles.html"><span class="doc">Execution Profiles</span></a></dt>
 <dd>An introduction to a more flexible way of configuring request execution</dd>
 <dt><a class="reference internal" href="performance.html"><span class="doc">Performance Notes</span></a></dt>
 <dd>Tips for getting good performance.</dd>
@@ -116,11 +71,11 @@ The source code for this driver can be found on <a class="reference external" hr
 <dt><a class="reference internal" href="lwt.html"><span class="doc">Lightweight Transactions (Compare-and-set)</span></a></dt>
 <dd>Working with results of conditional requests</dd>
 <dt><a class="reference internal" href="user_defined_types.html"><span class="doc">User Defined Types</span></a></dt>
-<dd>Working with Cassandra 2.1&#8217;s user-defined types</dd>
+<dd>Working with Cassandra 2.1’s user-defined types</dd>
 <dt><a class="reference internal" href="security.html"><span class="doc">Security</span></a></dt>
 <dd>An overview of the security features of the driver</dd>
 <dt><a class="reference internal" href="dates_and_times.html"><span class="doc">Working with Dates and Times</span></a></dt>
-<dd>Some discussion on the driver&#8217;s approach to working with timestamp, date, time types</dd>
+<dd>Some discussion on the driver’s approach to working with timestamp, date, time types</dd>
 <dt><a class="reference internal" href="faq.html"><span class="doc">Frequently Asked Questions</span></a></dt>
 <dd>A collection of Frequently Asked Questions</dd>
 </dl>
@@ -145,26 +100,79 @@ The source code for this driver can be found on <a class="reference external" hr
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="api/index.html" title="next chapter">API Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api/index.html" title="API Documentation"
-             >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

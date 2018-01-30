@@ -1,21 +1,18 @@
 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Index &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Index &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,38 +23,16 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-
+    <link rel="search" title="Search" href="search.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -178,10 +153,10 @@
       </ul></li>
       <li><a href="api/cassandra/metadata.html#cassandra.metadata.Metadata.all_hosts">all_hosts() (cassandra.metadata.Metadata method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cassandra/cqlengine/query.html#cassandra.cqlengine.query.ModelQuerySet.allow_filtering">allow_filtering() (cassandra.cqlengine.query.ModelQuerySet method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cassandra.html#cassandra.AlreadyExists">AlreadyExists</a>
 </li>
       <li><a href="api/cassandra.html#cassandra.ConsistencyLevel.ANY">ANY (cassandra.ConsistencyLevel attribute)</a>
@@ -217,6 +192,8 @@
 </li>
       </ul></li>
       <li><a href="api/cassandra/cqlengine/columns.html#cassandra.cqlengine.columns.Ascii">Ascii (class in cassandra.cqlengine.columns)</a>
+</li>
+      <li><a href="api/cassandra/io/asyncioreactor.html#cassandra.io.asyncioreactor.AsyncioConnection">AsyncioConnection (class in cassandra.io.asyncioreactor)</a>
 </li>
       <li><a href="api/cassandra/io/asyncorereactor.html#cassandra.io.asyncorereactor.AsyncoreConnection">AsyncoreConnection (class in cassandra.io.asyncorereactor)</a>
 </li>
@@ -316,6 +293,8 @@
 </li>
       <li><a href="api/cassandra/encoder.html#module-cassandra.encoder">cassandra.encoder (module)</a>
 </li>
+      <li><a href="api/cassandra/io/asyncioreactor.html#module-cassandra.io.asyncioreactor">cassandra.io.asyncioreactor (module)</a>
+</li>
       <li><a href="api/cassandra/io/asyncorereactor.html#module-cassandra.io.asyncorereactor">cassandra.io.asyncorereactor (module)</a>
 </li>
       <li><a href="api/cassandra/io/eventletreactor.html#module-cassandra.io.eventletreactor">cassandra.io.eventletreactor (module)</a>
@@ -388,10 +367,10 @@
 </li>
       <li><a href="api/cassandra/cluster.html#cassandra.cluster.Cluster.connection_class">connection_class (cassandra.cluster.Cluster attribute)</a>
 </li>
-      <li><a href="api/cassandra/metrics.html#cassandra.metrics.Metrics.connection_errors">connection_errors (cassandra.metrics.Metrics attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/cassandra/metrics.html#cassandra.metrics.Metrics.connection_errors">connection_errors (cassandra.metrics.Metrics attribute)</a>
+</li>
       <li><a href="api/cassandra/connection.html#cassandra.connection.ConnectionBusy">ConnectionBusy</a>
 </li>
       <li><a href="api/cassandra/connection.html#cassandra.connection.ConnectionException">ConnectionException</a>
@@ -1656,23 +1635,75 @@
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>cassandra.cqlengine.columns - Column types for object mapping models &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>cassandra.cqlengine.columns - Column types for object mapping models &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,64 +24,16 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="cassandra.cqlengine.query - Query and filter model objects" href="query.html" />
-    <link rel="prev" title="cassandra.cqlengine.models - Table models for object mapping" href="models.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="query.html" title="cassandra.cqlengine.query - Query and filter model objects"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="cassandra.cqlengine.models - Table models for object mapping"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">API Documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a><ul>
-<li><a class="reference internal" href="#columns">Columns</a></li>
-<li><a class="reference internal" href="#column-types">Column Types</a></li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="cassandra.cqlengine.models - Table models for object mapping" href="models.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="models.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.models</span></code> - Table models for object mapping</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="query.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/api/cassandra/cqlengine/columns.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -98,7 +47,7 @@
 <blockquote>
 <div><p>Columns in your models map to columns in your CQL table. You define CQL columns by defining column attributes on your model classes.
 For a model to be valid it needs at least one primary key column and one non-primary key column.</p>
-<p>Just as in CQL, the order you define your columns in is important, and is the same order they are defined in on a model&#8217;s corresponding table.</p>
+<p>Just as in CQL, the order you define your columns in is important, and is the same order they are defined in on a model’s corresponding table.</p>
 <p>Each column on your model definitions needs to be an instance of a Column class.</p>
 </div></blockquote>
 <dl class="class">
@@ -181,9 +130,9 @@ for how to specify the value of this column on specialized models.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>min_length</strong> (<em>int</em>) &#8211; Sets the minimum length of this string, for validation purposes.
+<li><strong>min_length</strong> (<em>int</em>) – Sets the minimum length of this string, for validation purposes.
 Defaults to 1 if this is a <code class="docutils literal"><span class="pre">required</span></code> column. Otherwise, None.</li>
-<li><strong>max_length</strong> (<em>int</em>) &#8211; Sets the maximum length of this string, for validation purposes.</li>
+<li><strong>max_length</strong> (<em>int</em>) – Sets the maximum length of this string, for validation purposes.</li>
 </ul>
 </td>
 </tr>
@@ -275,14 +224,14 @@ This allows equality comparison between assigned values and values read back fro
 
 <dl class="class">
 <dt id="cassandra.cqlengine.columns.List">
-<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">List</code><span class="sig-paren">(</span><em>value_type</em>, <em>default=&lt;type 'list'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.List" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">List</code><span class="sig-paren">(</span><em>value_type</em>, <em>default=&lt;class 'list'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.List" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores a list of ordered values</p>
 <p><a class="reference external" href="http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_list_t.html">http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_list_t.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value_type</strong> &#8211; a column class indicating the types of the value</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value_type</strong> – a column class indicating the types of the value</td>
 </tr>
 </tbody>
 </table>
@@ -290,7 +239,7 @@ This allows equality comparison between assigned values and values read back fro
 
 <dl class="class">
 <dt id="cassandra.cqlengine.columns.Map">
-<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">Map</code><span class="sig-paren">(</span><em>key_type</em>, <em>value_type</em>, <em>default=&lt;type 'dict'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#Map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.Map" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">Map</code><span class="sig-paren">(</span><em>key_type</em>, <em>value_type</em>, <em>default=&lt;class 'dict'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#Map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.Map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores a key -&gt; value map (dictionary)</p>
 <p><a class="reference external" href="http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_map_t.html">http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_map_t.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -298,8 +247,8 @@ This allows equality comparison between assigned values and values read back fro
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key_type</strong> &#8211; a column class indicating the types of the key</li>
-<li><strong>value_type</strong> &#8211; a column class indicating the types of the value</li>
+<li><strong>key_type</strong> – a column class indicating the types of the key</li>
+<li><strong>value_type</strong> – a column class indicating the types of the value</li>
 </ul>
 </td>
 </tr>
@@ -309,7 +258,7 @@ This allows equality comparison between assigned values and values read back fro
 
 <dl class="class">
 <dt id="cassandra.cqlengine.columns.Set">
-<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">Set</code><span class="sig-paren">(</span><em>value_type</em>, <em>strict=True</em>, <em>default=&lt;type 'set'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.Set" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cassandra.cqlengine.columns.</code><code class="descname">Set</code><span class="sig-paren">(</span><em>value_type</em>, <em>strict=True</em>, <em>default=&lt;class 'set'&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cassandra/cqlengine/columns.html#Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cqlengine.columns.Set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores a set of unordered, unique values</p>
 <p><a class="reference external" href="http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_set_t.html">http://www.datastax.com/documentation/cql/3.1/cql/cql_using/use_set_t.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -317,8 +266,8 @@ This allows equality comparison between assigned values and values read back fro
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>value_type</strong> &#8211; a column class indicating the types of the value</li>
-<li><strong>strict</strong> &#8211; sets whether non set values will be coerced to set
+<li><strong>value_type</strong> – a column class indicating the types of the value</li>
+<li><strong>strict</strong> – sets whether non set values will be coerced to set
 type on validation, or raise a validation error, defaults to True</li>
 </ul>
 </td>
@@ -346,9 +295,9 @@ type on validation, or raise a validation error, defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>min_length</strong> (<em>int</em>) &#8211; Sets the minimum length of this string, for validation purposes.
+<li><strong>min_length</strong> (<em>int</em>) – Sets the minimum length of this string, for validation purposes.
 Defaults to 1 if this is a <code class="docutils literal"><span class="pre">required</span></code> column. Otherwise, None.</li>
-<li><strong>max_length</strong> (<em>int</em>) &#8211; Sets the maximum length of this string, for validation purposes.</li>
+<li><strong>max_length</strong> (<em>int</em>) – Sets the maximum length of this string, for validation purposes.</li>
 </ul>
 </td>
 </tr>
@@ -393,7 +342,7 @@ Defaults to 1 if this is a <code class="docutils literal"><span class="pre">requ
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_type</strong> (<em>type</em>) &#8211; specifies the <a class="reference internal" href="usertype.html#cassandra.cqlengine.usertype.UserType" title="cassandra.cqlengine.usertype.UserType"><code class="xref py py-class docutils literal"><span class="pre">UserType</span></code></a> model of the column</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_type</strong> (<em>type</em>) – specifies the <a class="reference internal" href="usertype.html#cassandra.cqlengine.usertype.UserType" title="cassandra.cqlengine.usertype.UserType"><code class="xref py py-class docutils literal"><span class="pre">UserType</span></code></a> model of the column</td>
 </tr>
 </tbody>
 </table>
@@ -418,30 +367,98 @@ Defaults to 1 if this is a <code class="docutils literal"><span class="pre">requ
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#core-driver">Core Driver</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#object-mapper">Object Mapper</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="models.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.models</span></code> - Table models for object mapping</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#columns">Columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#column-types">Column Types</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="query.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="connection.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.connection</span></code> - Connection management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="management.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.management</span></code> - Schema management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usertype.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.usertype</span></code> - Model classes for User Defined Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Documentation</a><ul>
+      <li>Previous: <a href="models.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.models</span></code> - Table models for object mapping</a></li>
+      <li>Next: <a href="query.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="query.html" title="cassandra.cqlengine.query - Query and filter model objects"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="cassandra.cqlengine.models - Table models for object mapping"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >API Documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../../_sources/api/cassandra/cqlengine/columns.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

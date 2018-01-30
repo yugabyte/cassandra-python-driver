@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Performance Notes &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Performance Notes &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,64 +24,16 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Paging Large Queries" href="query_paging.html" />
-    <link rel="prev" title="Execution Profiles (experimental)" href="execution_profiles.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="query_paging.html" title="Paging Large Queries"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="execution_profiles.html" title="Execution Profiles (experimental)"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Performance Notes</a><ul>
-<li><a class="reference internal" href="#pypy">PyPy</a></li>
-<li><a class="reference internal" href="#cython-extensions">Cython Extensions</a></li>
-<li><a class="reference internal" href="#multiprocessing">multiprocessing</a></li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Execution Profiles" href="execution_profiles.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="execution_profiles.html"
-                        title="previous chapter">Execution Profiles (experimental)</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="query_paging.html"
-                        title="next chapter">Paging Large Queries</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/performance.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -101,7 +50,7 @@ with <a class="reference internal" href="api/cassandra/cluster.html#cassandra.cl
 <p>Examples of multiple request patterns can be found in the benchmark scripts included in the driver project.</p>
 <p>The choice of execution pattern will depend on the application context. For applications dealing with multiple
 requests in a given context, the recommended pattern is to use concurrent asynchronous
-requests with callbacks. For many use cases, you don&#8217;t need to implement this pattern yourself.
+requests with callbacks. For many use cases, you don’t need to implement this pattern yourself.
 <a class="reference internal" href="api/cassandra/concurrent.html#cassandra.concurrent.execute_concurrent" title="cassandra.concurrent.execute_concurrent"><code class="xref py py-meth docutils literal"><span class="pre">cassandra.concurrent.execute_concurrent()</span></code></a> and <a class="reference internal" href="api/cassandra/concurrent.html#cassandra.concurrent.execute_concurrent_with_args" title="cassandra.concurrent.execute_concurrent_with_args"><code class="xref py py-meth docutils literal"><span class="pre">cassandra.concurrent.execute_concurrent_with_args()</span></code></a>
 provide this pattern with a synchronous API and tunable concurrency.</p>
 <p>Due to the GIL and limited concurrency, the driver can become CPU-bound pretty quickly. The sections below
@@ -136,29 +85,85 @@ see <a class="reference external" href="http://www.datastax.com/dev/blog/datasta
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Performance Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pypy">PyPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cython-extensions">Cython Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiprocessing">multiprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="execution_profiles.html" title="previous chapter">Execution Profiles</a></li>
+      <li>Next: <a href="query_paging.html" title="next chapter">Paging Large Queries</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="query_paging.html" title="Paging Large Queries"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="execution_profiles.html" title="Execution Profiles (experimental)"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/performance.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

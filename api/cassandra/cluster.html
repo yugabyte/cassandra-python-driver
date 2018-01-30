@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>cassandra.cluster - Clusters and Sessions &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>cassandra.cluster - Clusters and Sessions &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,55 +24,16 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="cassandra.policies - Load balancing and Failure Handling Policies" href="policies.html" />
-    <link rel="prev" title="cassandra - Exceptions and Enums" href="../cassandra.html" /> 
+    <link rel="prev" title="cassandra - Exceptions and Enums" href="../cassandra.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="policies.html" title="cassandra.policies - Load balancing and Failure Handling Policies"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../cassandra.html" title="cassandra - Exceptions and Enums"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">API Documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../cassandra.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">cassandra</span></code> - Exceptions and Enums</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="policies.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">cassandra.policies</span></code> - Load balancing and Failure Handling Policies</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/api/cassandra/cluster.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -152,7 +110,7 @@ cluster is upgraded.</p>
 If left as the default of <code class="xref py py-const docutils literal"><span class="pre">True</span></code>, either lz4 or snappy compression
 may be used, depending on what is supported by both the driver
 and Cassandra.  If both are fully supported, lz4 will be preferred.</p>
-<p>You may also set this to &#8216;snappy&#8217; or &#8216;lz4&#8217; to request that specific
+<p>You may also set this to ‘snappy’ or ‘lz4’ to request that specific
 compression type.</p>
 <p>Setting this to <code class="xref py py-const docutils literal"><span class="pre">False</span></code> disables compression.</p>
 </dd></dl>
@@ -238,7 +196,7 @@ is enabled in Cassandra.</p>
 <p>By default, a <code class="docutils literal"><span class="pre">ca_certs</span></code> value should be supplied (the value should be
 a string pointing to the location of the CA certs file), and you probably
 want to specify <code class="docutils literal"><span class="pre">ssl_version</span></code> as <code class="docutils literal"><span class="pre">ssl.PROTOCOL_TLSv1</span></code> to match
-Cassandra&#8217;s default protocol.</p>
+Cassandra’s default protocol.</p>
 <div class="versionchanged">
 <p><span class="versionmodified">Changed in version 3.3.0.</span></p>
 </div>
@@ -284,12 +242,17 @@ I/O with Cassandra.  These are the current options:</p>
 <li><a class="reference internal" href="io/eventletreactor.html#cassandra.io.eventletreactor.EventletConnection" title="cassandra.io.eventletreactor.EventletConnection"><code class="xref py py-class docutils literal"><span class="pre">cassandra.io.eventletreactor.EventletConnection</span></code></a> (requires monkey-patching - see doc for details)</li>
 <li><a class="reference internal" href="io/geventreactor.html#cassandra.io.geventreactor.GeventConnection" title="cassandra.io.geventreactor.GeventConnection"><code class="xref py py-class docutils literal"><span class="pre">cassandra.io.geventreactor.GeventConnection</span></code></a> (requires monkey-patching - see doc for details)</li>
 <li><a class="reference internal" href="io/twistedreactor.html#cassandra.io.twistedreactor.TwistedConnection" title="cassandra.io.twistedreactor.TwistedConnection"><code class="xref py py-class docutils literal"><span class="pre">cassandra.io.twistedreactor.TwistedConnection</span></code></a></li>
+<li>EXPERIMENTAL: <a class="reference internal" href="io/asyncioreactor.html#cassandra.io.asyncioreactor.AsyncioConnection" title="cassandra.io.asyncioreactor.AsyncioConnection"><code class="xref py py-class docutils literal"><span class="pre">cassandra.io.asyncioreactor.AsyncioConnection</span></code></a></li>
 </ul>
 <p>By default, <code class="docutils literal"><span class="pre">AsyncoreConnection</span></code> will be used, which uses
 the <code class="docutils literal"><span class="pre">asyncore</span></code> module in the Python standard library.</p>
 <p>If <code class="docutils literal"><span class="pre">libev</span></code> is installed, <code class="docutils literal"><span class="pre">LibevConnection</span></code> will be used instead.</p>
 <p>If <code class="docutils literal"><span class="pre">gevent</span></code> or <code class="docutils literal"><span class="pre">eventlet</span></code> monkey-patching is detected, the corresponding
 connection class will be used automatically.</p>
+<p><code class="docutils literal"><span class="pre">AsyncioConnection</span></code>, which uses the <code class="docutils literal"><span class="pre">asyncio</span></code> module in the Python
+standard library, is also available, but currently experimental. Note that
+it requires <code class="docutils literal"><span class="pre">asyncio</span></code> features that were only introduced in the 3.4 line
+in 3.4.6, and in the 3.5 line in 3.5.1.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -324,7 +287,7 @@ receiving a schema_change event.</p>
 <p>The driver delays a random amount of time in the range [0.0, window)
 before executing the refresh. This serves two purposes:</p>
 <p>1.) Spread the refresh for deployments with large fanout from C* to client tier,
-preventing a &#8216;thundering herd&#8217; problem with many clients refreshing simultaneously.</p>
+preventing a ‘thundering herd’ problem with many clients refreshing simultaneously.</p>
 <p>2.) Remove redundant refreshes. Redundant events arriving within the delay period
 are discarded, and only one refresh is executed.</p>
 <p>Setting this to zero will execute refreshes immediately.</p>
@@ -349,7 +312,7 @@ receiving a topology_change event.</p>
 <dd><p>Window, in seconds, within which the driver will start the reconnect after
 receiving a status_change event.</p>
 <p>Setting this to zero will connect immediately.</p>
-<p>This is primarily used to avoid &#8216;thundering herd&#8217; in deployments with large fanout from cluster to clients.
+<p>This is primarily used to avoid ‘thundering herd’ in deployments with large fanout from cluster to clients.
 When nodes come up, clients attempt to reprepare prepared statements (depending on <a class="reference internal" href="#cassandra.cluster.Cluster.reprepare_on_up" title="cassandra.cluster.Cluster.reprepare_on_up"><code class="xref py py-attr docutils literal"><span class="pre">reprepare_on_up</span></code></a>), and
 establish connection pools. This can cause a rush of connections and queries if not mitigated with this factor.</p>
 </dd></dl>
@@ -658,8 +621,14 @@ topology changes or schema updates.</p>
 
 <dl class="class">
 <dt id="cassandra.cluster.ExecutionProfile">
-<em class="property">class </em><code class="descclassname">cassandra.cluster.</code><code class="descname">ExecutionProfile</code><span class="sig-paren">(</span><em>load_balancing_policy=&lt;object object&gt;</em>, <em>retry_policy=None</em>, <em>consistency_level=10</em>, <em>serial_consistency_level=None</em>, <em>request_timeout=10.0</em>, <em>row_factory=&lt;function named_tuple_factory&gt;</em>, <em>speculative_execution_policy=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cassandra/cluster.html#ExecutionProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cluster.ExecutionProfile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cassandra.cluster.</code><code class="descname">ExecutionProfile</code><span class="sig-paren">(</span><em>load_balancing_policy=&lt;object object&gt;</em>, <em>retry_policy=None</em>, <em>consistency_level=LOCAL_ONE</em>, <em>serial_consistency_level=None</em>, <em>request_timeout=10.0</em>, <em>row_factory=&lt;function tuple_factory&gt;</em>, <em>speculative_execution_policy=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cassandra/cluster.html#ExecutionProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cassandra.cluster.ExecutionProfile" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
+<dt id="cassandra.cluster.ExecutionProfile.consistency_level">
+<code class="descname">consistency_level</code><em class="property"> = LOCAL_ONE</em><a class="headerlink" href="#cassandra.cluster.ExecutionProfile.consistency_level" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> used when not specified on a <a class="reference internal" href="query.html#cassandra.query.Statement" title="cassandra.query.Statement"><code class="xref py py-class docutils literal"><span class="pre">Statement</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="cassandra.cluster.ExecutionProfile.load_balancing_policy">
 <code class="descname">load_balancing_policy</code><em class="property"> = None</em><a class="headerlink" href="#cassandra.cluster.ExecutionProfile.load_balancing_policy" title="Permalink to this definition">¶</a></dt>
 <dd><p>An instance of <a class="reference internal" href="policies.html#cassandra.policies.LoadBalancingPolicy" title="cassandra.policies.LoadBalancingPolicy"><code class="xref py py-class docutils literal"><span class="pre">policies.LoadBalancingPolicy</span></code></a> or one of its subclasses.</p>
@@ -673,12 +642,6 @@ topology changes or schema updates.</p>
 <dd><p>An instance of <a class="reference internal" href="policies.html#cassandra.policies.RetryPolicy" title="cassandra.policies.RetryPolicy"><code class="xref py py-class docutils literal"><span class="pre">policies.RetryPolicy</span></code></a> instance used when <a class="reference internal" href="query.html#cassandra.query.Statement" title="cassandra.query.Statement"><code class="xref py py-class docutils literal"><span class="pre">Statement</span></code></a> objects do not have a
 <a class="reference internal" href="query.html#cassandra.query.Statement.retry_policy" title="cassandra.query.Statement.retry_policy"><code class="xref py py-attr docutils literal"><span class="pre">retry_policy</span></code></a> explicitly set.</p>
 <p>Defaults to <a class="reference internal" href="policies.html#cassandra.policies.RetryPolicy" title="cassandra.policies.RetryPolicy"><code class="xref py py-class docutils literal"><span class="pre">RetryPolicy</span></code></a> if not specified</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="cassandra.cluster.ExecutionProfile.consistency_level">
-<code class="descname">consistency_level</code><em class="property"> = 10</em><a class="headerlink" href="#cassandra.cluster.ExecutionProfile.consistency_level" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> used when not specified on a <a class="reference internal" href="query.html#cassandra.query.Statement" title="cassandra.query.Statement"><code class="xref py py-class docutils literal"><span class="pre">Statement</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1340,30 +1303,108 @@ against.</p>
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#core-driver">Core Driver</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../cassandra.html"><code class="docutils literal"><span class="pre">cassandra</span></code> - Exceptions and Enums</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cluster</span></code> - Clusters and Sessions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="policies.html"><code class="docutils literal"><span class="pre">cassandra.policies</span></code> - Load balancing and Failure Handling Policies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html"><code class="docutils literal"><span class="pre">cassandra.auth</span></code> - Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metadata.html"><code class="docutils literal"><span class="pre">cassandra.metadata</span></code> - Schema and Ring Topology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html"><code class="docutils literal"><span class="pre">cassandra.metrics</span></code> - Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query.html"><code class="docutils literal"><span class="pre">cassandra.query</span></code> - Prepared Statements, Batch Statements, Tracing, and Row Factories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pool.html"><code class="docutils literal"><span class="pre">cassandra.pool</span></code> - Hosts and Connection Pools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protocol.html"><code class="docutils literal"><span class="pre">cassandra.protocol</span></code> - Protocol Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="encoder.html"><code class="docutils literal"><span class="pre">cassandra.encoder</span></code> - Encoders for non-prepared Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decoder.html"><code class="docutils literal"><span class="pre">cassandra.decoder</span></code> - Data Return Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concurrent.html"><code class="docutils literal"><span class="pre">cassandra.concurrent</span></code> - Utilities for Concurrent Statement Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="connection.html"><code class="docutils literal"><span class="pre">cassandra.connection</span></code> - Low Level Connection Info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html"><code class="docutils literal"><span class="pre">cassandra.util</span></code> - Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/asyncioreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.asyncioreactor</span></code> - <code class="docutils literal"><span class="pre">asyncio</span></code> Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/asyncorereactor.html"><code class="docutils literal"><span class="pre">cassandra.io.asyncorereactor</span></code> - <code class="docutils literal"><span class="pre">asyncore</span></code> Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/eventletreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.eventletreactor</span></code> - <code class="docutils literal"><span class="pre">eventlet</span></code>-compatible Connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/libevreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.libevreactor</span></code> - <code class="docutils literal"><span class="pre">libev</span></code> Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/geventreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.geventreactor</span></code> - <code class="docutils literal"><span class="pre">gevent</span></code>-compatible Event Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="io/twistedreactor.html"><code class="docutils literal"><span class="pre">cassandra.io.twistedreactor</span></code> - Twisted Event Loop</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#object-mapper">Object Mapper</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">API Documentation</a><ul>
+      <li>Previous: <a href="../cassandra.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra</span></code> - Exceptions and Enums</a></li>
+      <li>Next: <a href="policies.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.policies</span></code> - Load balancing and Failure Handling Policies</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="policies.html" title="cassandra.policies - Load balancing and Failure Handling Policies"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../cassandra.html" title="cassandra - Exceptions and Enums"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >API Documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../_sources/api/cassandra/cluster.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

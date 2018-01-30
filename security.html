@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Security &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Security &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,67 +24,16 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="User Defined Types" href="user_defined_types.html" />
-    <link rel="prev" title="Lightweight Transactions (Compare-and-set)" href="lwt.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="user_defined_types.html" title="User Defined Types"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="lwt.html" title="Lightweight Transactions (Compare-and-set)"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Security</a><ul>
-<li><a class="reference internal" href="#authentication">Authentication</a><ul>
-<li><a class="reference internal" href="#custom-authenticators">Custom Authenticators</a></li>
-<li><a class="reference internal" href="#protocol-v1-authentication">Protocol v1 Authentication</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#ssl">SSL</a></li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Lightweight Transactions (Compare-and-set)" href="lwt.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="lwt.html"
-                        title="previous chapter">Lightweight Transactions (Compare-and-set)</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="user_defined_types.html"
-                        title="next chapter">User Defined Types</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/security.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -105,10 +51,10 @@ authentication mechanism when <a class="reference internal" href="api/cassandra/
 is set to 2 or higher.  To use this authentication, set
 <a class="reference internal" href="api/cassandra/cluster.html#cassandra.cluster.Cluster.auth_provider" title="cassandra.cluster.Cluster.auth_provider"><code class="xref py py-attr docutils literal"><span class="pre">auth_provider</span></code></a> to an instance of a subclass
 of <a class="reference internal" href="api/cassandra/auth.html#cassandra.auth.AuthProvider" title="cassandra.auth.AuthProvider"><code class="xref py py-class docutils literal"><span class="pre">AuthProvider</span></code></a>.  When working
-with Cassandra&#8217;s <code class="docutils literal"><span class="pre">PasswordAuthenticator</span></code>, you can use
+with Cassandra’s <code class="docutils literal"><span class="pre">PasswordAuthenticator</span></code>, you can use
 the <a class="reference internal" href="api/cassandra/auth.html#cassandra.auth.PlainTextAuthProvider" title="cassandra.auth.PlainTextAuthProvider"><code class="xref py py-class docutils literal"><span class="pre">PlainTextAuthProvider</span></code></a> class.</p>
 <p>For example, suppose Cassandra is setup with its default
-&#8216;cassandra&#8217; user with a password of &#8216;cassandra&#8217;:</p>
+‘cassandra’ user with a password of ‘cassandra’:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cassandra.cluster</span> <span class="kn">import</span> <span class="n">Cluster</span>
 <span class="kn">from</span> <span class="nn">cassandra.auth</span> <span class="kn">import</span> <span class="n">PlainTextAuthProvider</span>
 
@@ -117,11 +63,11 @@ the <a class="reference internal" href="api/cassandra/auth.html#cassandra.auth.P
 </pre></div>
 </div>
 <p>When working with version 2 or higher of the driver, the protocol
-version is set to 2 by default, but we&#8217;ve included it in the example
+version is set to 2 by default, but we’ve included it in the example
 to be explicit.</p>
 <div class="section" id="custom-authenticators">
 <h3>Custom Authenticators<a class="headerlink" href="#custom-authenticators" title="Permalink to this headline">¶</a></h3>
-<p>If you&#8217;re using something other than Cassandra&#8217;s <code class="docutils literal"><span class="pre">PasswordAuthenticator</span></code>,
+<p>If you’re using something other than Cassandra’s <code class="docutils literal"><span class="pre">PasswordAuthenticator</span></code>,
 <a class="reference internal" href="api/cassandra/auth.html#cassandra.auth.SaslAuthProvider" title="cassandra.auth.SaslAuthProvider"><code class="xref py py-class docutils literal"><span class="pre">SaslAuthProvider</span></code></a> is provided for generic SASL authentication mechanisms,
 utilizing the <code class="docutils literal"><span class="pre">pure-sasl</span></code> package.
 If these do not suit your needs, you may need to create your own subclasses of
@@ -154,7 +100,7 @@ is enabled in Cassandra.</p>
 <p>By default, a <code class="docutils literal"><span class="pre">ca_certs</span></code> value should be supplied (the value should be
 a string pointing to the location of the CA certs file), and you probably
 want to specify <code class="docutils literal"><span class="pre">ssl_version</span></code> as <code class="docutils literal"><span class="pre">ssl.PROTOCOL_TLSv1</span></code> to match
-Cassandra&#8217;s default protocol.</p>
+Cassandra’s default protocol.</p>
 <p>For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cassandra.cluster</span> <span class="kn">import</span> <span class="n">Cluster</span>
 <span class="kn">from</span> <span class="nn">ssl</span> <span class="kn">import</span> <span class="n">PROTOCOL_TLSv1</span><span class="p">,</span> <span class="n">CERT_REQUIRED</span>
@@ -178,29 +124,88 @@ your configuration. For further reading, Andrew Mussey has published a thorough 
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-authenticators">Custom Authenticators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#protocol-v1-authentication">Protocol v1 Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ssl">SSL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="lwt.html" title="previous chapter">Lightweight Transactions (Compare-and-set)</a></li>
+      <li>Next: <a href="user_defined_types.html" title="next chapter">User Defined Types</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="user_defined_types.html" title="User Defined Types"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="lwt.html" title="Lightweight Transactions (Compare-and-set)"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/security.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>cassandra.cqlengine.connection - Connection management for cqlengine &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>cassandra.cqlengine.connection - Connection management for cqlengine &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,55 +24,16 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="cassandra.cqlengine.management - Schema management for cqlengine" href="management.html" />
-    <link rel="prev" title="cassandra.cqlengine.query - Query and filter model objects" href="query.html" /> 
+    <link rel="prev" title="cassandra.cqlengine.query - Query and filter model objects" href="query.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="management.html" title="cassandra.cqlengine.management - Schema management for cqlengine"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="query.html" title="cassandra.cqlengine.query - Query and filter model objects"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">API Documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="query.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="management.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.management</span></code> - Schema management for cqlengine</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/api/cassandra/cqlengine/connection.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -108,12 +66,12 @@ This may be relaxed in the future</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>hosts</strong> (<em>list</em>) &#8211; list of hosts, (<code class="docutils literal"><span class="pre">contact_points</span></code> for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a>)</li>
-<li><strong>default_keyspace</strong> (<em>str</em>) &#8211; The default keyspace to use</li>
-<li><strong>consistency</strong> (<em>int</em>) &#8211; The global default <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> - default is the same as <a class="reference internal" href="../cluster.html#cassandra.cluster.Session.default_consistency_level" title="cassandra.cluster.Session.default_consistency_level"><code class="xref py py-attr docutils literal"><span class="pre">Session.default_consistency_level</span></code></a></li>
-<li><strong>lazy_connect</strong> (<em>bool</em>) &#8211; True if should not connect until first use</li>
-<li><strong>retry_connect</strong> (<em>bool</em>) &#8211; True if we should retry to connect even if there was a connection failure initially</li>
-<li><strong>**kwargs</strong> &#8211; Pass-through keyword arguments for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a></li>
+<li><strong>hosts</strong> (<em>list</em>) – list of hosts, (<code class="docutils literal"><span class="pre">contact_points</span></code> for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a>)</li>
+<li><strong>default_keyspace</strong> (<em>str</em>) – The default keyspace to use</li>
+<li><strong>consistency</strong> (<em>int</em>) – The global default <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> - default is the same as <a class="reference internal" href="../cluster.html#cassandra.cluster.Session.default_consistency_level" title="cassandra.cluster.Session.default_consistency_level"><code class="xref py py-attr docutils literal"><span class="pre">Session.default_consistency_level</span></code></a></li>
+<li><strong>lazy_connect</strong> (<em>bool</em>) – True if should not connect until first use</li>
+<li><strong>retry_connect</strong> (<em>bool</em>) – True if we should retry to connect even if there was a connection failure initially</li>
+<li><strong>**kwargs</strong> – Pass-through keyword arguments for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -134,22 +92,22 @@ mutually exclusive, and <code class="docutils literal"><span class="pre">consist
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>hosts</strong> (<em>list</em>) &#8211; list of hosts, (<code class="docutils literal"><span class="pre">contact_points</span></code> for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a>).</li>
-<li><strong>consistency</strong> (<em>int</em>) &#8211; The default <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> for the
-registered connection&#8217;s new session. Default is the same as
+<li><strong>hosts</strong> (<em>list</em>) – list of hosts, (<code class="docutils literal"><span class="pre">contact_points</span></code> for <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a>).</li>
+<li><strong>consistency</strong> (<em>int</em>) – The default <a class="reference internal" href="../../cassandra.html#cassandra.ConsistencyLevel" title="cassandra.ConsistencyLevel"><code class="xref py py-class docutils literal"><span class="pre">ConsistencyLevel</span></code></a> for the
+registered connection’s new session. Default is the same as
 <a class="reference internal" href="../cluster.html#cassandra.cluster.Session.default_consistency_level" title="cassandra.cluster.Session.default_consistency_level"><code class="xref py py-attr docutils literal"><span class="pre">Session.default_consistency_level</span></code></a>. For use with <code class="docutils literal"><span class="pre">hosts</span></code> only;
 will fail when used with <code class="docutils literal"><span class="pre">session</span></code>.</li>
-<li><strong>lazy_connect</strong> (<em>bool</em>) &#8211; True if should not connect until first use. For
+<li><strong>lazy_connect</strong> (<em>bool</em>) – True if should not connect until first use. For
 use with <code class="docutils literal"><span class="pre">hosts</span></code> only; will fail when used with <code class="docutils literal"><span class="pre">session</span></code>.</li>
-<li><strong>retry_connect</strong> (<em>bool</em>) &#8211; True if we should retry to connect even if there
+<li><strong>retry_connect</strong> (<em>bool</em>) – True if we should retry to connect even if there
 was a connection failure initially. For use with <code class="docutils literal"><span class="pre">hosts</span></code> only; will
 fail when used with <code class="docutils literal"><span class="pre">session</span></code>.</li>
-<li><strong>cluster_options</strong> (<em>dict</em>) &#8211; A dict of options to be used as keyword
+<li><strong>cluster_options</strong> (<em>dict</em>) – A dict of options to be used as keyword
 arguments to <a class="reference internal" href="../cluster.html#cassandra.cluster.Cluster" title="cassandra.cluster.Cluster"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Cluster</span></code></a>. For use with <code class="docutils literal"><span class="pre">hosts</span></code>
 only; will fail when used with <code class="docutils literal"><span class="pre">session</span></code>.</li>
-<li><strong>default</strong> (<em>bool</em>) &#8211; If True, set the new connection as the cqlengine
+<li><strong>default</strong> (<em>bool</em>) – If True, set the new connection as the cqlengine
 default</li>
-<li><strong>session</strong> (<a class="reference internal" href="../cluster.html#cassandra.cluster.Session" title="cassandra.cluster.Session"><em>Session</em></a>) &#8211; A <a class="reference internal" href="../cluster.html#cassandra.cluster.Session" title="cassandra.cluster.Session"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Session</span></code></a> to be used in
+<li><strong>session</strong> (<a class="reference internal" href="../cluster.html#cassandra.cluster.Session" title="cassandra.cluster.Session"><em>Session</em></a>) – A <a class="reference internal" href="../cluster.html#cassandra.cluster.Session" title="cassandra.cluster.Session"><code class="xref py py-class docutils literal"><span class="pre">cassandra.cluster.Session</span></code></a> to be used in
 the created connection.</li>
 </ul>
 </td>
@@ -174,30 +132,94 @@ the created connection.</li>
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#core-driver">Core Driver</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#object-mapper">Object Mapper</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="models.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.models</span></code> - Table models for object mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="columns.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.columns</span></code> - Column types for object mapping models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">cassandra.cqlengine.connection</span></code> - Connection management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="management.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.management</span></code> - Schema management for cqlengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usertype.html"><code class="docutils literal"><span class="pre">cassandra.cqlengine.usertype</span></code> - Model classes for User Defined Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Documentation</a><ul>
+      <li>Previous: <a href="query.html" title="previous chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.query</span></code> - Query and filter model objects</a></li>
+      <li>Next: <a href="management.html" title="next chapter"><code class="docutils literal"><span class="pre">cassandra.cqlengine.management</span></code> - Schema management for cqlengine</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="management.html" title="cassandra.cqlengine.management - Schema management for cqlengine"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="query.html" title="cassandra.cqlengine.query - Query and filter model objects"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >API Documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../../../_sources/api/cassandra/cqlengine/connection.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

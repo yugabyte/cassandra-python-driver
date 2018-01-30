@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Working with Dates and Times &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Working with Dates and Times &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,71 +24,16 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
-    <link rel="prev" title="Frequently Asked Questions" href="cqlengine/faq.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="faq.html" title="Frequently Asked Questions"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="cqlengine/faq.html" title="Frequently Asked Questions"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Working with Dates and Times</a><ul>
-<li><a class="reference internal" href="#timestamps-cassandra-datetype">timestamps (Cassandra DateType)</a><ul>
-<li><a class="reference internal" href="#write-path">Write Path</a></li>
-<li><a class="reference internal" href="#read-path">Read Path</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#date-time-cassandra-datetype">date, time (Cassandra DateType)</a><ul>
-<li><a class="reference internal" href="#id1">Write Path</a></li>
-<li><a class="reference internal" href="#id2">Read Path</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Frequently Asked Questions" href="cqlengine/faq.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cqlengine/faq.html"
-                        title="previous chapter">Frequently Asked Questions</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="faq.html"
-                        title="next chapter">Frequently Asked Questions</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/dates_and_times.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -106,8 +48,8 @@ reasoning behind it, and describe approaches to working with these types.</p>
 <h2>timestamps (Cassandra DateType)<a class="headerlink" href="#timestamps-cassandra-datetype" title="Permalink to this headline">¶</a></h2>
 <p>Timestamps in Cassandra are timezone-naive timestamps encoded as millseconds since UNIX epoch. Clients working with
 timestamps in this database usually find it easiest to reason about them if they are always assumed to be UTC. To quote the
-pytz documentation, &#8220;The preferred way of dealing with times is to always work in UTC, converting to localtime only when
-generating output to be read by humans.&#8221; The driver adheres to this tenant, and assumes UTC is always in the database. The
+pytz documentation, “The preferred way of dealing with times is to always work in UTC, converting to localtime only when
+generating output to be read by humans.” The driver adheres to this tenant, and assumes UTC is always in the database. The
 driver attempts to make this correct on the way in, and assumes no timezone on the way out.</p>
 <div class="section" id="write-path">
 <h3>Write Path<a class="headerlink" href="#write-path" title="Permalink to this headline">¶</a></h3>
@@ -116,9 +58,9 @@ driver attempts to make this correct on the way in, and assumes no timezone on t
 value.</p>
 <ul class="simple">
 <li>If the <code class="docutils literal"><span class="pre">datetime</span></code> object is timezone-aware, the timestamp is shifted, and represents the UTC timestamp equivalent.</li>
-<li>If the <code class="docutils literal"><span class="pre">datetime</span></code> object is timezone-naive, this results in no shift &#8211; any <code class="docutils literal"><span class="pre">datetime</span></code> with no timezone information is assumed to be UTC</li>
+<li>If the <code class="docutils literal"><span class="pre">datetime</span></code> object is timezone-naive, this results in no shift – any <code class="docutils literal"><span class="pre">datetime</span></code> with no timezone information is assumed to be UTC</li>
 </ul>
-<p>Note the second point above applies even to &#8220;local&#8221; times created using <code class="docutils literal"><span class="pre">now()</span></code>:</p>
+<p>Note the second point above applies even to “local” times created using <code class="docutils literal"><span class="pre">now()</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span>
@@ -128,7 +70,7 @@ value.</p>
 <p>These do not contain timezone information intrinsically, so they will be assumed to be UTC and not shifted. When generating
 timestamps in the application, it is clearer to use <code class="docutils literal"><span class="pre">datetime.utcnow()</span></code> to be explicit about it.</p>
 <p>If the input for a timestamp is numeric, it is assumed to be a epoch-relative millisecond timestamp, as specified in the
-CQL spec &#8211; no scaling or conversion is done.</p>
+CQL spec – no scaling or conversion is done.</p>
 </div>
 <div class="section" id="read-path">
 <h3>Read Path<a class="headerlink" href="#read-path" title="Permalink to this headline">¶</a></h3>
@@ -182,29 +124,92 @@ insances using <a class="reference internal" href="api/cassandra/util.html#cassa
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_mapper.html">Object Mapper</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Dates and Times</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#timestamps-cassandra-datetype">timestamps (Cassandra DateType)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#write-path">Write Path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-path">Read Path</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#date-time-cassandra-datetype">date, time (Cassandra DateType)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Write Path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Read Path</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cqlengine/faq.html" title="previous chapter">Frequently Asked Questions</a></li>
+      <li>Next: <a href="faq.html" title="next chapter">Frequently Asked Questions</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="faq.html" title="Frequently Asked Questions"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="cqlengine/faq.html" title="Frequently Asked Questions"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/dates_and_times.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>

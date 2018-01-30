@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Upgrade Guide &#8212; Cassandra Driver 3.12.0 documentation</title>
-    
+    <title>Upgrade Guide &#8212; Cassandra Driver 3.13.0 documentation</title>
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.12.0',
+        VERSION:     '3.13.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,82 +24,16 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Models" href="models.html" />
-    <link rel="prev" title="Object Mapper" href="../object_mapper.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="Models"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../object_mapper.html" title="Object Mapper"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../object_mapper.html" accesskey="U">Object Mapper</a> &#187;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Upgrade Guide</a><ul>
-<li><a class="reference internal" href="#functional-changes">Functional Changes</a><ul>
-<li><a class="reference internal" href="#list-prepend-reversing">List Prepend Reversing</a></li>
-<li><a class="reference internal" href="#date-column-type">Date Column Type</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#remove-cqlengine">Remove cqlengine</a></li>
-<li><a class="reference internal" href="#organization">Organization</a><ul>
-<li><a class="reference internal" href="#imports">Imports</a></li>
-<li><a class="reference internal" href="#package-level-aliases">Package-Level Aliases</a></li>
-<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
-<li><a class="reference internal" href="#unicodemixin-consolidation">UnicodeMixin Consolidation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#api-deprecations">API Deprecations</a><ul>
-<li><a class="reference internal" href="#float-double-overload">Float/Double Overload</a></li>
-<li><a class="reference internal" href="#schema-management">Schema Management</a></li>
-<li><a class="reference internal" href="#model-inheritance">Model Inheritance</a></li>
-<li><a class="reference internal" href="#timeuuid-from-datetime">TimeUUID.from_datetime</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    <link rel="prev" title="Object Mapper" href="../object_mapper.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../object_mapper.html"
-                        title="previous chapter">Object Mapper</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="models.html"
-                        title="next chapter">Models</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/cqlengine/upgrade_guide.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+  </head>
+  <body>
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -144,7 +75,7 @@ but it will not prevent side-by-side installation.</p>
 <h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="imports">
 <h3>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h3>
-<p>cqlengine is now integrated as a sub-package of the driver base package &#8216;cassandra&#8217;.
+<p>cqlengine is now integrated as a sub-package of the driver base package ‘cassandra’.
 Upgrading will require adjusting imports to cqlengine. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cassandra.cqlengine</span> <span class="k">import</span> <span class="n">columns</span>
 </pre></div>
@@ -213,7 +144,7 @@ the API, but noted here for completeness.</p>
 <div class="section" id="api-deprecations">
 <h2>API Deprecations<a class="headerlink" href="#api-deprecations" title="Permalink to this headline">¶</a></h2>
 <p>This upgrade served as a good juncture to deprecate certain API features and invite users to upgrade
-to new ones. The first released version does not change functionality &#8211; only introduces deprecation
+to new ones. The first released version does not change functionality – only introduces deprecation
 warnings. Future releases will remove these features in favor of the alternatives.</p>
 <div class="section" id="float-double-overload">
 <h3>Float/Double Overload<a class="headerlink" href="#float-double-overload" title="Permalink to this headline">¶</a></h3>
@@ -236,10 +167,10 @@ intent is simply to make the function match the CQL verb it invokes.</p>
 <h3>Model Inheritance<a class="headerlink" href="#model-inheritance" title="Permalink to this headline">¶</a></h3>
 <p>The names for class attributes controlling model inheritance are changing. Changes are as follows:</p>
 <ul class="simple">
-<li>Replace &#8216;polymorphic_key&#8217; in the base class Column definition with <a class="reference internal" href="../api/cassandra/cqlengine/columns.html#cassandra.cqlengine.columns.Column.discriminator_column" title="cassandra.cqlengine.columns.Column.discriminator_column"><code class="xref py py-attr docutils literal"><span class="pre">discriminator_column</span></code></a></li>
-<li>Replace the &#8216;__polymorphic_key__&#8217; class attribute the derived classes with <a class="reference internal" href="../api/cassandra/cqlengine/models.html#cassandra.cqlengine.models.Model.__discriminator_value__" title="cassandra.cqlengine.models.Model.__discriminator_value__"><code class="xref py py-attr docutils literal"><span class="pre">__discriminator_value__</span></code></a></li>
+<li>Replace ‘polymorphic_key’ in the base class Column definition with <a class="reference internal" href="../api/cassandra/cqlengine/columns.html#cassandra.cqlengine.columns.Column.discriminator_column" title="cassandra.cqlengine.columns.Column.discriminator_column"><code class="xref py py-attr docutils literal"><span class="pre">discriminator_column</span></code></a></li>
+<li>Replace the ‘__polymorphic_key__’ class attribute the derived classes with <a class="reference internal" href="../api/cassandra/cqlengine/models.html#cassandra.cqlengine.models.Model.__discriminator_value__" title="cassandra.cqlengine.models.Model.__discriminator_value__"><code class="xref py py-attr docutils literal"><span class="pre">__discriminator_value__</span></code></a></li>
 </ul>
-<p>The functionality is unchanged &#8211; the intent here is to make the names and language around these attributes more precise.
+<p>The functionality is unchanged – the intent here is to make the names and language around these attributes more precise.
 For now, the old names are just deprecated, and the mapper will emit warnings if they are used. The old names
 will be removed in a future version.</p>
 <p>The example below shows a simple translation:</p>
@@ -285,30 +216,117 @@ will be removed in a future version.</p>
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Cassandra Driver</a></h1>
+
+
+
+<p class="blurb">Python driver for Cassandra</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=datastax&repo=python-driver&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../upgrading.html">Upgrading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../execution_profiles.html">Execution Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query_paging.html">Paging Large Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lwt.html">Lightweight Transactions (Compare-and-set)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_defined_types.html">User Defined Types</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../object_mapper.html">Object Mapper</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../object_mapper.html#contents">Contents</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Upgrade Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functional-changes">Functional Changes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#list-prepend-reversing">List Prepend Reversing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#date-column-type">Date Column Type</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#remove-cqlengine">Remove cqlengine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#organization">Organization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#imports">Imports</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#package-level-aliases">Package-Level Aliases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#unicodemixin-consolidation">UnicodeMixin Consolidation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-deprecations">API Deprecations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#float-double-overload">Float/Double Overload</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#schema-management">Schema Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#model-inheritance">Model Inheritance</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timeuuid-from-datetime">TimeUUID.from_datetime</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queryset.html">Making Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batches.html">Batch Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="connections.html">Connections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="third_party.html">Third party integrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../object_mapper.html#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dates_and_times.html">Working with Dates and Times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../object_mapper.html">Object Mapper</a><ul>
+      <li>Previous: <a href="../object_mapper.html" title="previous chapter">Object Mapper</a></li>
+      <li>Next: <a href="models.html" title="next chapter">Models</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="Models"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../object_mapper.html" title="Object Mapper"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cassandra Driver 3.12.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../object_mapper.html" >Object Mapper</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2013-2017 DataStax.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cqlengine/upgrade_guide.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2013-2017 DataStax.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
-    </div>
+
+    
+
+    
   </body>
 </html>
