@@ -63,6 +63,7 @@ class LargeDataTests(unittest.TestCase):
     def make_session_and_keyspace(self):
         cluster = Cluster(protocol_version=PROTOCOL_VERSION)
         session = cluster.connect()
+        self.addCleanup(cluster.shutdown)
         session.default_timeout = 20.0  # increase the default timeout
         session.row_factory = dict_factory
 
@@ -121,8 +122,6 @@ class LargeDataTests(unittest.TestCase):
         for i, row in enumerate(results):
             self.assertAlmostEqual(row['i'], i, delta=3)
 
-        session.cluster.shutdown()
-
     def test_wide_batch_rows(self):
         """
         Test for inserting wide rows with batching
@@ -171,8 +170,6 @@ class LargeDataTests(unittest.TestCase):
         index_value = to_insert-1
         self.assertEqual(lastValue,index_value,"Verification failed only found {0} inserted we were expecting {1}".format(j,index_value))
 
-        session.cluster.shutdown()
-
     def test_wide_byte_rows(self):
         """
         Test for inserting wide row of bytes
@@ -211,8 +208,6 @@ class LargeDataTests(unittest.TestCase):
 
         self.assertGreaterEqual(i, expected_results, "Verification failed only found {0} inserted we were expecting {1}".format(i,expected_results))
 
-        session.cluster.shutdown()
-
     def test_large_text(self):
         """
         Test for inserting a large text field
@@ -246,8 +241,6 @@ class LargeDataTests(unittest.TestCase):
             found_result = True
         self.assertTrue(found_result, "No results were found")
 
-        session.cluster.shutdown()
-
     def test_wide_table(self):
         table = 'wide_table'
         table_width = 330
@@ -274,5 +267,3 @@ class LargeDataTests(unittest.TestCase):
         for row in result:
             for i in range(table_width):
                 self.assertEqual(row[create_column_name(i)], i)
-
-        session.cluster.shutdown()
