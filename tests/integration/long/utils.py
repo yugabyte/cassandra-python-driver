@@ -62,8 +62,7 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
     session.row_factory = named_tuple_factory
     session.default_consistency_level = ConsistencyLevel.QUORUM
 
-    if keyspace in cluster.metadata.keyspaces.keys():
-        session.execute('DROP KEYSPACE %s' % keyspace, timeout=20)
+    session.execute('DROP KEYSPACE IF EXISTS %s' % keyspace, timeout=20)
 
     if simple_strategy:
         ddl = "CREATE KEYSPACE %s WITH replication" \
