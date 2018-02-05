@@ -2,7 +2,7 @@ schedules:
   commit_master:
     schedule: per_commit
     branches:
-      include: [master]
+      include: [python-jenkins-fixes]
     env_vars: |
       EVENT_LOOP_MANAGER='libev'
     matrix:

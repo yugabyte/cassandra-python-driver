@@ -65,17 +65,30 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
     if keyspace in cluster.metadata.keyspaces.keys():
         session.execute('DROP KEYSPACE %s' % keyspace, timeout=20)
 
-    if simple_strategy:
-        ddl = "CREATE KEYSPACE %s WITH replication" \
-              " = {'class': 'SimpleStrategy', 'replication_factor': '%s'}"
-        session.execute(ddl % (keyspace, replication_factor), timeout=10)
-    else:
-        if not replication_strategy:
-            raise Exception('replication_strategy is not set')
+    try:
+        if simple_strategy:
+            ddl = "CREATE KEYSPACE %s WITH replication" \
+                  " = {'class': 'SimpleStrategy', 'replication_factor': '%s'}"
+            session.execute(ddl % (keyspace, replication_factor), timeout=10)
+        else:
+            if not replication_strategy:
+                raise Exception('replication_strategy is not set')
 
-        ddl = "CREATE KEYSPACE %s" \
-              " WITH replication = { 'class' : 'NetworkTopologyStrategy', %s }"
-        session.execute(ddl % (keyspace, str(replication_strategy)[1:-1]), timeout=10)
+            ddl = "CREATE KEYSPACE %s" \
+                  " WITH replication = { 'class' : 'NetworkTopologyStrategy', %s }"
+            session.execute(ddl % (keyspace, str(replication_strategy)[1:-1]), timeout=10)
+    except Exception as e:
+        print("Exception when creating keyspace: {}".format(e))
+        import os
+        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ccm')
+        CLUSTER_NAME = 'test_cluster/node{}/logs/system.log'
+        logs_path = os.path.join(path, CLUSTER_NAME)
+
+        for i in range(1, 4):
+            with open(logs_path.format(i), 'r') as log_file:
+                all_logs = log_file.read()
+                print(all_logs)
+                print("\n\n\n\n==========================\n\n\n\n\n")
 
     ddl = 'CREATE TABLE %s.cf (k int PRIMARY KEY, i int)'
     session.execute(ddl % keyspace, timeout=10)
