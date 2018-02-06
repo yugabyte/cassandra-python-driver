@@ -23,6 +23,7 @@ from cassandra.query import named_tuple_factory
 from cassandra.cluster import ConsistencyLevel
 
 from tests.integration import get_node, get_cluster, wait_for_node_socket
+import os
 
 IP_FORMAT = '127.0.0.%s'
 
@@ -79,8 +80,8 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
             session.execute(ddl % (keyspace, str(replication_strategy)[1:-1]), timeout=10)
     except Exception as e:
         print("Exception when creating keyspace: {}".format(e))
-        import os
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ccm')
+        ccm_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+        path = os.path.join(ccm_path, 'ccm')
         CLUSTER_NAME = 'test_cluster/node{}/logs/system.log'
         logs_path = os.path.join(path, CLUSTER_NAME)
 
