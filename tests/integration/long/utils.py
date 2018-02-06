@@ -90,6 +90,7 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
                 all_logs = log_file.read()
                 print(all_logs)
                 print("\n\n\n\n==========================\n\n\n\n\n")
+        raise e
 
     ddl = 'CREATE TABLE %s.cf (k int PRIMARY KEY, i int)'
     session.execute(ddl % keyspace, timeout=10)
