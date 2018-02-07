@@ -78,6 +78,13 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
             ddl = "CREATE KEYSPACE %s" \
                   " WITH replication = { 'class' : 'NetworkTopologyStrategy', %s }"
             session.execute(ddl % (keyspace, str(replication_strategy)[1:-1]), timeout=10)
+
+        ddl = 'CREATE TABLE %s.cf (k int PRIMARY KEY, i int)'
+        session.execute(ddl % keyspace, timeout=10)
+        session.execute('USE %s' % keyspace)
+
+        session.row_factory = row_factory
+        session.default_consistency_level = ConsistencyLevel.LOCAL_ONE
     except Exception as e:
         print("Exception when creating keyspace: {}".format(e))
         ccm_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
@@ -91,13 +98,6 @@ def create_schema(cluster, session, keyspace, simple_strategy=True,
                 print(all_logs)
                 print("\n\n\n\n==========================\n\n\n\n\n")
         raise e
-
-    ddl = 'CREATE TABLE %s.cf (k int PRIMARY KEY, i int)'
-    session.execute(ddl % keyspace, timeout=10)
-    session.execute('USE %s' % keyspace)
-
-    session.row_factory = row_factory
-    session.default_consistency_level = ConsistencyLevel.LOCAL_ONE
 
 
 def start(node):
