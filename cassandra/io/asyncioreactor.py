@@ -40,16 +40,7 @@ class AsyncioTimer(object):
                                   'does not implement .end()')
 
     def __init__(self, timeout, callback, loop):
-        delayed = self._call_delayed_coro(timeout=timeout,
-                                          callback=callback,
-                                          loop=loop)
-        self._handle = asyncio.run_coroutine_threadsafe(delayed, loop=loop)
-
-    @staticmethod
-    @asyncio.coroutine
-    def _call_delayed_coro(timeout, callback, loop):
-        yield from asyncio.sleep(timeout, loop=loop)
-        return callback()
+        self._handle = loop.call_soon_threadsafe(loop.call_later, timeout, callback)
 
     def __lt__(self, other):
         try:
