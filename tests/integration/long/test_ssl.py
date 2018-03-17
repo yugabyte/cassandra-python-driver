@@ -21,7 +21,7 @@ import os, sys, traceback, logging, ssl, time
 from cassandra.cluster import Cluster, NoHostAvailable
 from cassandra import ConsistencyLevel
 from cassandra.query import SimpleStatement
-from tests.integration import PROTOCOL_VERSION, get_cluster, remove_cluster, use_single_node
+from tests.integration import PROTOCOL_VERSION, get_cluster, remove_cluster, use_single_node, EVENT_LOOP_MANAGER
 
 log = logging.getLogger(__name__)
 
@@ -37,6 +37,11 @@ DRIVER_KEYFILE = "tests/integration/long/ssl/driver.key"
 DRIVER_CERTFILE = "tests/integration/long/ssl/driver.pem"
 DRIVER_CERTFILE_BAD = "tests/integration/long/ssl/python_driver_bad.pem"
 
+if "twisted" in EVENT_LOOP_MANAGER:
+    import OpenSSL
+    ssl_version = OpenSSL.SSL.TLSv1_METHOD
+else:
+    ssl_version = ssl.PROTOCOL_TLSv1
 
 def setup_cluster_ssl(client_auth=False):
     """
@@ -130,7 +135,7 @@ class SSLConnectionTests(unittest.TestCase):
 
         # find absolute path to client CA_CERTS
         abs_path_ca_cert_path = os.path.abspath(CLIENT_CA_CERTS)
-        ssl_options = {'ca_certs': abs_path_ca_cert_path,'ssl_version': ssl.PROTOCOL_TLSv1}
+        ssl_options = {'ca_certs': abs_path_ca_cert_path,'ssl_version': ssl_version}
         validate_ssl_options(ssl_options=ssl_options)
 
     def test_can_connect_with_ssl_long_running(self):
@@ -147,7 +152,7 @@ class SSLConnectionTests(unittest.TestCase):
         # find absolute path to client CA_CERTS
         abs_path_ca_cert_path = os.path.abspath(CLIENT_CA_CERTS)
         ssl_options = {'ca_certs': abs_path_ca_cert_path,
-                       'ssl_version': ssl.PROTOCOL_TLSv1}
+                       'ssl_version': ssl_version}
         tries = 0
         while True:
             if tries > 5:
@@ -187,7 +192,7 @@ class SSLConnectionTests(unittest.TestCase):
         # find absolute path to client CA_CERTS
         abs_path_ca_cert_path = os.path.abspath(CLIENT_CA_CERTS)
         ssl_options = {'ca_certs': abs_path_ca_cert_path,
-                       'ssl_version': ssl.PROTOCOL_TLSv1,
+                       'ssl_version': ssl_version,
                        'cert_reqs': ssl.CERT_REQUIRED,
                        'check_hostname': True}
 
@@ -225,7 +230,7 @@ class SSLConnectionAuthTests(unittest.TestCase):
         abs_driver_keyfile = os.path.abspath(DRIVER_KEYFILE)
         abs_driver_certfile = os.path.abspath(DRIVER_CERTFILE)
         ssl_options = {'ca_certs': abs_path_ca_cert_path,
-                       'ssl_version': ssl.PROTOCOL_TLSv1,
+                       'ssl_version': ssl_version,
                        'keyfile': abs_driver_keyfile,
                        'certfile': abs_driver_certfile}
         validate_ssl_options(ssl_options)
@@ -251,7 +256,7 @@ class SSLConnectionAuthTests(unittest.TestCase):
         abs_driver_certfile = os.path.abspath(DRIVER_CERTFILE)
 
         ssl_options = {'ca_certs': abs_path_ca_cert_path,
-                       'ssl_version': ssl.PROTOCOL_TLSv1,
+                       'ssl_version': ssl_version,
                        'keyfile': abs_driver_keyfile,
                        'certfile': abs_driver_certfile,
                        'cert_reqs': ssl.CERT_REQUIRED,
@@ -273,7 +278,7 @@ class SSLConnectionAuthTests(unittest.TestCase):
 
         abs_path_ca_cert_path = os.path.abspath(CLIENT_CA_CERTS)
         cluster = Cluster(protocol_version=PROTOCOL_VERSION, ssl_options={'ca_certs': abs_path_ca_cert_path,
-                                                                          'ssl_version': ssl.PROTOCOL_TLSv1})
+                                                                          'ssl_version': ssl_version})
         # attempt to connect and expect an exception
 
         with self.assertRaises(NoHostAvailable) as context:
@@ -300,7 +305,7 @@ class SSLConnectionAuthTests(unittest.TestCase):
         abs_driver_certfile = os.path.abspath(DRIVER_CERTFILE_BAD)
 
         cluster = Cluster(protocol_version=PROTOCOL_VERSION, ssl_options={'ca_certs': abs_path_ca_cert_path,
-                                                                          'ssl_version': ssl.PROTOCOL_TLSv1,
+                                                                          'ssl_version': ssl_version,
                                                                           'keyfile': abs_driver_keyfile,
                                                                           'certfile': abs_driver_certfile})
         with self.assertRaises(NoHostAvailable) as context:
