@@ -4,6 +4,7 @@
 Features
 --------
 * Add one() function to the ResultSet API (PYTHON-947)
+* Make protocol messages pluggable (PYTHON-956)
 * cqlengine: asynchronous execution support (PYTHON-605)
 * cqlengine: Makes Model._table_name_ case sensitive (PYTHON-855)
 * cqlengine: LIKE filter operator (PYTHON-512)

@@ -172,7 +172,7 @@ class CustomResultMessageRaw(ResultMessage):
     This is a custom Result Message that is used to return raw results, rather then
     results which contain objects.
     """
-    my_type_codes = ResultMessage.type_codes.copy()
+    my_type_codes = ResultMessage.Codec.type_codes.copy()
     my_type_codes[0xc] = UUIDType
     type_codes = my_type_codes
 
@@ -201,7 +201,7 @@ class CustomResultMessageTracked(ResultMessage):
     This is a custom Result Message that is use to track what primitive types
     have been processed when it receives results
     """
-    my_type_codes = ResultMessage.type_codes.copy()
+    my_type_codes = ResultMessage.Codec.type_codes.copy()
     my_type_codes[0xc] = UUIDType
     type_codes = my_type_codes
     checked_rev_row_set = set()
