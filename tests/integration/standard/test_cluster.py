@@ -301,7 +301,7 @@ class ClusterTests(unittest.TestCase):
         # test_connect_on_keyspace
         session2 = cluster.connect('test1rf')
         result2 = session2.execute("SELECT * FROM test")
-        self.assertEqual(list(result), list(result2)
+        self.assertEqual(list(result), list(result2))
         cluster.shutdown()
 
     def test_set_keyspace_twice(self):
