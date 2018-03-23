@@ -295,13 +295,14 @@ class ClusterTests(unittest.TestCase):
             """)
         self.assertFalse(result)
 
-        result = session.execute("SELECT * FROM test1rf.test")
-        self.assertEqual([(8889, 8889)], list(result), "Rows in ResultSet are {0}".format(result.current_rows))
+        result_set = session.execute("SELECT * FROM test1rf.test")
+        result = list(result_set)
+        self.assertEqual([(8889, 8889)], result, "Rows in ResultSet are {0}".format(result_set.current_rows))
 
         # test_connect_on_keyspace
         session2 = cluster.connect('test1rf')
         result2 = session2.execute("SELECT * FROM test")
-        self.assertEqual(list(result), list(result2))
+        self.assertEqual(result, list(result2))
         cluster.shutdown()
 
     def test_set_keyspace_twice(self):
