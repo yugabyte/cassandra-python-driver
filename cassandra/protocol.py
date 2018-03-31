@@ -1109,65 +1109,6 @@ class _ProtocolHandler(object):
 
         return msg
 
-# Message Encoder/Decoder registration
-# This is temporary and will be removed by the DriverContext
-_message_encoders = {}
-_message_decoders = {}
-
-versions = (ProtocolVersion.V3, ProtocolVersion.V4, ProtocolVersion.V5)
-
-for v in versions:
-    _message_encoders[v] = {}
-    _message_decoders[v] = {}
-
-    for m in [
-        StartupMessage,
-        RegisterMessage,
-        BatchMessage,
-        QueryMessage,
-        ExecuteMessage,
-        PrepareMessage,
-        OptionsMessage,
-        AuthResponseMessage,
-    ]:
-        _message_encoders[v][m.opcode] = m.encode
-
-    error_decoders = [(e.error_code, e.decode) for e in [
-        UnavailableErrorMessage,
-        ReadTimeoutErrorMessage,
-        WriteTimeoutErrorMessage,
-        IsBootstrappingErrorMessage,
-        OverloadedErrorMessage,
-        UnauthorizedErrorMessage,
-        ServerError,
-        ProtocolException,
-        BadCredentials,
-        TruncateError,
-        ReadFailureMessage,
-        FunctionFailureMessage,
-        WriteFailureMessage,
-        CDCWriteException,
-        SyntaxException,
-        InvalidRequestException,
-        ConfigurationException,
-        PreparedQueryNotFound,
-        AlreadyExistsException
-    ]]
-
-    for m in [
-        ReadyMessage,
-        EventMessage.Codec,
-        ResultMessage.Codec,
-        AuthenticateMessage,
-        AuthSuccessMessage,
-        AuthChallengeMessage,
-        SupportedMessage,
-        ErrorMessage.Codec(error_decoders)
-
-    ]:
-
-        _message_decoders[v][m.opcode] = m.decode
-
 
 def cython_protocol_handler(colparser):
     """
@@ -1203,7 +1144,7 @@ def cython_protocol_handler(colparser):
         cython_message_decoders[v] = _message_decoders[v].copy()
         cython_message_decoders[v][ResultMessage.opcode] = FastResultMessage.Codec.decode
 
-    return _ProtocolHandler(encoders=_message_encoders, decoders=cython_message_decoders)
+    return _ProtocolHandler  # todo fix
 
 
 if HAVE_CYTHON:
@@ -1212,7 +1153,7 @@ if HAVE_CYTHON:
     LazyProtocolHandler = cython_protocol_handler(LazyParser())
 else:
     # Use Python-based ProtocolHandler
-    ProtocolHandler = _ProtocolHandler(encoders=_message_encoders, decoders=_message_decoders)
+    ProtocolHandler = _ProtocolHandler
     LazyProtocolHandler = None
 
 
