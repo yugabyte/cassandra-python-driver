@@ -211,33 +211,50 @@ class TwistedConnection(Connection):
         if self.ssl_options:
             try:
                 import OpenSSL.crypto
-            except ImportError:
+                from OpenSSL.crypto import load_certificate, FILETYPE_PEM
+            except ImportError as e:
                 raise ImportError(
-                    'pyOpenSSL must be installed to enable SSL support with the Twisted event loop'
+                    str(e) +
+                    ', pyOpenSSL must be installed to enable SSL support with the Twisted event loop'
                 )
             from twisted.internet import ssl
 
-            class SSLContextFactory(ssl.ClientContextFactory):
-                def __init__(self, ssl_options):
-                    self.ssl_options = ssl_options
+            class _SSLContextFactory(ssl.ClientContextFactory):
+                def __init__(self_context, ssl_options):
+                    self_context.ssl_options = ssl_options
 
-                def getContext(self):
+                def getContext(self_context):
                     # This version has to be OpenSSL.SSL.DESIRED_VERSION
                     # instead of ssl.DESIRED_VERSION as in other loops
-                    self.method = self.ssl_options["ssl_version"]
-                    context = ssl.ClientContextFactory.getContext(self)
-                    if "certfile" in self.ssl_options:
-                        context.use_certificate_file(self.ssl_options["certfile"])
-                    if "keyfile" in self.ssl_options:
-                        context.use_privatekey_file(self.ssl_options["keyfile"])
-                    if "ca_certs" in self.ssl_options:
-                        context.load_client_ca(self.ssl_options["ca_certs"])
+                    self_context.method = self_context.ssl_options["ssl_version"]
+                    context = ssl.ClientContextFactory.getContext(self_context)
+                    if "certfile" in self_context.ssl_options:
+                        context.use_certificate_file(self_context.ssl_options["certfile"])
+                    if "keyfile" in self_context.ssl_options:
+                        context.use_privatekey_file(self_context.ssl_options["keyfile"])
+                    if "ca_certs" in self_context.ssl_options:
+                        x509 = load_certificate(FILETYPE_PEM, open(self_context.ssl_options["ca_certs"]).read())
+                        store = context.get_cert_store()
+                        store.add_cert(x509)
+
+                    if "cert_reqs" in self_context.ssl_options:
+                        # This expects OpenSSL.SSL.VERIFY_NONE/OpenSSL.SSL.VERIFY_PEER
+                        # or OpenSSL.SSL.VERIFY_FAIL_IF_NO_PEER_CERT
+                        context.set_verify(self_context.ssl_options["cert_reqs"],
+                                           callback=self_context.verify_callback)
+
                     return context
+
+                def verify_callback(self_context, connection, x509, errnum, errdepth, ok):
+                    if ok:
+                        if self._check_hostname and self.host != x509.get_subject().commonName:
+                            return False
+                    return ok
 
             self.connector = reactor.connectSSL(
                 host=self.host, port=self.port,
                 factory=TwistedConnectionClientFactory(self),
-                contextFactory=SSLContextFactory(self.ssl_options),
+                contextFactory=_SSLContextFactory(self.ssl_options),
                 timeout=self.connect_timeout)
         else:
             self.connector = reactor.connectTCP(
