@@ -18,7 +18,8 @@ except ImportError:
 
 from mock import patch
 import socket
-from cassandra.io.asyncorereactor import AsyncoreConnection
+import cassandra.io.asyncorereactor
+from cassandra.io.asyncorereactor import AsyncoreConnection, AsyncoreLoop
 from tests import is_monkey_patched
 from tests.unit.io.utils import ReactorTestMixin, TimerTestMixin, noop_if_monkey_patched
 
@@ -66,6 +67,22 @@ class AsyncoreConnectionTest(ReactorTestMixin, AsyncorePatcher):
         if is_monkey_patched():
             raise unittest.SkipTest("Can't test asyncore with monkey patching")
 
+    def test_subclasses_share_loop(self):
+        cassandra.io.asyncorereactor.global_loop = None
+        class C1(AsyncoreConnection):
+            pass
+
+        class C2(AsyncoreConnection):
+            pass
+
+        c1 = C1
+        c1.initialize_reactor()
+
+        c2 = C2
+        c2.initialize_reactor()
+        import threading
+        event_loops_threads = [thread for thread in threading.enumerate() if thread.name == "cassandra_driver_event_loop"]
+        self.assertEqual(len(event_loops_threads), 1)
 
 class TestAsyncoreTimer(TimerTestMixin, AsyncorePatcher):
     connection_class = AsyncoreConnection

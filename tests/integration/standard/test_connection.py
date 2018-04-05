@@ -401,6 +401,26 @@ class AsyncoreConnectionTests(ConnectionTests, unittest.TestCase):
             raise unittest.SkipTest("Can't test asyncore with monkey patching")
         ConnectionTests.setUp(self)
 
+    def test_subclasses_share_loop(self):
+        import cassandra.io.asyncorereactor
+        cassandra.io.asyncorereactor.global_loop = None
+        class C1(AsyncoreConnection):
+            pass
+
+        class C2(AsyncoreConnection):
+            pass
+
+        clusterC1 = Cluster(connection_class=C1)
+        clusterC1.connect()
+        clusterC2 = Cluster(connection_class=C2)
+        clusterC2.connect()
+        self.addCleanup(clusterC1.shutdown)
+        self.addCleanup(clusterC2.shutdown)
+
+        import threading
+        event_loops_threads = [thread for thread in threading.enumerate() if
+                               thread.name == "cassandra_driver_event_loop"]
+        self.assertEqual(len(event_loops_threads), 1)
 
 class LibevConnectionTests(ConnectionTests, unittest.TestCase):
 
