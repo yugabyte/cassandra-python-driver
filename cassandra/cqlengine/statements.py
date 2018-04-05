@@ -21,7 +21,8 @@ from cassandra.query import FETCH_SIZE_UNSET
 from cassandra.cqlengine import columns
 from cassandra.cqlengine import UnicodeMixin
 from cassandra.cqlengine.functions import QueryValue
-from cassandra.cqlengine.operators import BaseWhereOperator, InOperator, EqualsOperator
+from cassandra.cqlengine.operators import (BaseWhereOperator, InOperator,
+                                           EqualsOperator, IsNotNullOperator)
 
 
 class StatementException(Exception):
@@ -56,26 +57,60 @@ class InQuoter(ValueQuoter):
         return '(' + ', '.join([cql_quote(v) for v in self.value]) + ')'
 
 
-class BaseClause(UnicodeMixin):
+class AbstractClause(UnicodeMixin):
+    """Abstract Clause for a field"""
 
-    def __init__(self, field, value):
+    def __init__(self, field):
         self.field = field
-        self.value = value
-        self.context_id = None
 
     def __unicode__(self):
         raise NotImplementedError
 
     def __hash__(self):
-        return hash(self.field) ^ hash(self.value)
+        return hash(self.field)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.field == other.field and self.value == other.value
+            return self.field == other.field
         return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+
+class ContextMixin(object):
+
+    context_id = None
+
+    def get_context_size(self):
+        """ returns the number of entries this clause will add to the query context """
+        return 1
+
+    def set_context_id(self, i):
+        """ sets the value placeholder that will be used in the query """
+        self.context_id = i
+
+    def update_context(self, ctx):
+        """ updates the query context with this clauses values """
+        if hasattr(self, 'value'):
+            assert isinstance(ctx, dict)
+            ctx[str(self.context_id)] = self.value
+
+
+class BaseClause(ContextMixin, AbstractClause):
+
+    def __init__(self, field, value):
+        super(BaseClause, self).__init__(field)
+        self.value = value
+        self.context_id = None
+
+    def __hash__(self):
+        return super(BaseClause, self).__hash__() ^ hash(self.value)
+
+    def __eq__(self, other):
+        if super(BaseClause, self).__eq__(other):
+            return self.value  == other.value
+        return False
 
     def get_context_size(self):
         """ returns the number of entries this clause will add to the query context """
@@ -91,10 +126,42 @@ class BaseClause(UnicodeMixin):
         ctx[str(self.context_id)] = self.value
 
 
-class WhereClause(BaseClause):
-    """ a single where statement used in queries """
+class BaseWhereClause(ContextMixin, AbstractClause):
 
-    def __init__(self, field, operator, value, quote_field=True):
+    def __init__(self, field, operator, quote_field=True):
+        """
+        :param field:
+        :param operator:
+        :param quote_field: hack to get the token function rendering properly
+        :return:
+        """
+        if not isinstance(operator, BaseWhereOperator):
+            raise StatementException(
+                "operator must be of type {0}, got {1}".format(BaseWhereOperator, type(operator))
+            )
+        super(BaseWhereClause, self).__init__(field)
+        self.operator = operator
+        self.quote_field = quote_field
+
+    def _maybe_quote(self, value):
+        return ('"{0}"' if self.quote_field else '{0}').format(value)
+
+    def __unicode__(self):
+        return u'{0} {1}'.format(self._maybe_quote(self.field), self.operator)
+
+    def __hash__(self):
+        return super(BaseWhereClause, self).__hash__() ^ hash(self.operator)
+
+    def __eq__(self, other):
+        if super(BaseWhereClause, self).__eq__(other):
+            return self.operator.__class__ == other.operator.__class__
+        return False
+
+
+class WhereClause(BaseWhereClause):
+    """ a simple where clause with a value used in queries """
+
+    def __init__(self, field, operator, value, **kwargs):
         """
 
         :param field:
@@ -103,25 +170,19 @@ class WhereClause(BaseClause):
         :param quote_field: hack to get the token function rendering properly
         :return:
         """
-        if not isinstance(operator, BaseWhereOperator):
-            raise StatementException(
-                "operator must be of type {0}, got {1}".format(BaseWhereOperator, type(operator))
-            )
-        super(WhereClause, self).__init__(field, value)
-        self.operator = operator
+        super(WhereClause, self).__init__(field, operator, **kwargs)
+        self.value = value
         self.query_value = self.value if isinstance(self.value, QueryValue) else QueryValue(self.value)
-        self.quote_field = quote_field
 
     def __unicode__(self):
-        field = ('"{0}"' if self.quote_field else '{0}').format(self.field)
-        return u'{0} {1} {2}'.format(field, self.operator, six.text_type(self.query_value))
+        return u'{0} {1}'.format(super(WhereClause, self).__unicode__(), six.text_type(self.query_value))
 
     def __hash__(self):
-        return super(WhereClause, self).__hash__() ^ hash(self.operator)
+        return super(WhereClause, self).__hash__() ^ hash(self.value)
 
     def __eq__(self, other):
         if super(WhereClause, self).__eq__(other):
-            return self.operator.__class__ == other.operator.__class__
+            return self.operator.value == other.value_
         return False
 
     def get_context_size(self):
@@ -136,6 +197,13 @@ class WhereClause(BaseClause):
             ctx[str(self.context_id)] = InQuoter(self.value)
         else:
             self.query_value.update_context(ctx)
+
+
+class IsNotNullClause(BaseWhereClause):
+    """IS NOT NULL Clause"""
+
+    def __init__(self, field, quote_field=True):
+        super(IsNotNullClause, self).__init__(field, IsNotNullOperator(), quote_field=quote_field)
 
 
 class AssignmentClause(BaseClause):

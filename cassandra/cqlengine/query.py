@@ -26,7 +26,7 @@ from cassandra.cqlengine.functions import Token, BaseQueryFunction, QueryValue
 from cassandra.cqlengine.operators import (InOperator, EqualsOperator, GreaterThanOperator,
                                            GreaterThanOrEqualOperator, LessThanOperator,
                                            LessThanOrEqualOperator, ContainsOperator, BaseWhereOperator)
-from cassandra.cqlengine.statements import (WhereClause, SelectStatement, DeleteStatement,
+from cassandra.cqlengine.statements import (BaseWhereClause, WhereClause, SelectStatement, DeleteStatement,
                                             UpdateStatement, InsertStatement,
                                             BaseCQLStatement, MapDeleteClause, ConditionalClause)
 
@@ -692,7 +692,7 @@ class AbstractQuerySet(object):
 
         clone = copy.deepcopy(self)
         for operator in args:
-            if not isinstance(operator, WhereClause):
+            if not isinstance(operator, BaseWhereClause):
                 raise QueryException('{0} is not a valid query operator'.format(operator))
             clone._where.append(operator)
 
@@ -1076,10 +1076,10 @@ class ModelQuerySet(AbstractQuerySet):
         # custom indexes to be queried with any operator (a difference
         # between a secondary index)
         equal_ops = [self.model._get_column_by_db_name(w.field) \
-                     for w in self._where if not isinstance(w.value, Token)
+                     for w in self._where if not isinstance(getattr(w, 'value', None), Token)
                      and (isinstance(w.operator, EqualsOperator)
                           or self.model._get_column_by_db_name(w.field).custom_index)]
-        token_comparison = any([w for w in self._where if isinstance(w.value, Token)])
+        token_comparison = any([w for w in self._where if isinstance(getattr(w, 'value', None), Token)])
         if not any(w.primary_key or w.has_index for w in equal_ops) and not token_comparison and not self._allow_filtering:
             raise QueryException(
                 ('Where clauses require either  =, a IN or a CONTAINS '
