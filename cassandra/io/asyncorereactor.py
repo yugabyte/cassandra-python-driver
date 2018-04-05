@@ -293,8 +293,8 @@ class AsyncoreLoop(object):
         log.debug("Dispatchers were closed")
 
 
-global_loop = None
-atexit.register(partial(_cleanup, global_loop))
+globals()["_global_loop"] = None
+atexit.register(partial(_cleanup, globals()["_global_loop"]))
 
 
 class AsyncoreConnection(Connection, asyncore.dispatcher):
@@ -308,29 +308,28 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
 
     @classmethod
     def initialize_reactor(cls):
-        global global_loop
-
-        if not global_loop:
-            global_loop = AsyncoreLoop()
+        if not globals()["_global_loop"]:
+            globals()["_global_loop"] = AsyncoreLoop()
         else:
             current_pid = os.getpid()
-            if global_loop._pid != current_pid:
+            if globals()["_global_loop"]._pid != current_pid:
                 log.debug("Detected fork, clearing and reinitializing reactor state")
                 cls.handle_fork()
-                global_loop = AsyncoreLoop()
+                globals()["_global_loop"] = AsyncoreLoop()
 
     @classmethod
     def handle_fork(cls):
-        global _dispatcher_map, global_loop
+        global _dispatcher_map
         _dispatcher_map = {}
-        if global_loop:
-            global_loop._cleanup()
-            global_loop = None
+        if globals()["_global_loop"]:
+            globals()["_global_loop"]._cleanup()
+            print("Setting to None")
+            del globals()["_global_loop"]
 
     @classmethod
     def create_timer(cls, timeout, callback):
         timer = Timer(timeout, callback)
-        global_loop.add_timer(timer)
+        globals()["_global_loop"].add_timer(timer)
         return timer
 
     def __init__(self, *args, **kwargs):
@@ -342,14 +341,14 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
         self._connect_socket()
 
         # start the event loop if needed
-        global_loop.maybe_start()
+        globals()["_global_loop"].maybe_start()
 
         init_handler = WaitableTimer(
             timeout=0,
             callback=partial(asyncore.dispatcher.__init__,
                              self, self._socket, _dispatcher_map)
         )
-        global_loop.add_timer(init_handler)
+        globals()["_global_loop"].add_timer(init_handler)
         init_handler.wait(kwargs["connect_timeout"])
 
         self._writable = True
@@ -449,7 +448,7 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
         with self.deque_lock:
             self.deque.extend(chunks)
             self._writable = True
-        global_loop.wake_loop()
+        globals()["_global_loop"].wake_loop()
 
     def writable(self):
         return self._writable
