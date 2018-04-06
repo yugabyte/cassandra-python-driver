@@ -180,6 +180,8 @@ cdef class DesUTF8Type(Deserializer):
 cdef class DesVarcharType(DesUTF8Type):
     pass
 
+cdef class DesJsonType(DesUTF8Type):
+    pass
 
 cdef class _DesParameterizedType(Deserializer):
 
