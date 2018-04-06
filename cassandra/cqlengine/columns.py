@@ -330,6 +330,12 @@ class Inet(Column):
     """
     db_type = 'inet'
 
+class Json(Column):
+    """
+    Stores a JSON entry in jsonb serialized format.
+    """
+    db_type = 'jsonb'
+
 
 class Text(Column):
     """

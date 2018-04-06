@@ -35,7 +35,7 @@ from cassandra.marshal import (int32_pack, int32_unpack, uint16_pack, uint16_unp
 from cassandra.cqltypes import (AsciiType, BytesType, BooleanType,
                                 CounterColumnType, DateType, DecimalType,
                                 DoubleType, FloatType, Int32Type,
-                                InetAddressType, IntegerType, ListType,
+                                InetAddressType, IntegerType, JsonType, ListType,
                                 LongType, MapType, SetType, TimeUUIDType,
                                 UTF8Type, VarcharType, UUIDType, UserType,
                                 TupleType, lookup_casstype, SimpleDateType,
