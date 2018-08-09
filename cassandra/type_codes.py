@@ -30,13 +30,14 @@ Type codes are repeated here from the Cassandra binary protocol specification:
             0x0013    ShortType
             0x0014    ByteType
             0x0015    DurationType
-            0x0019    JsonType
             0x0020    List: the value is an [option], representing the type
                             of the elements of the list.
             0x0021    Map: the value is two [option], representing the types of the
                            keys and values of the map
             0x0022    Set: the value is an [option], representing the type
                             of the elements of the set
+
+            0x0080    JsonType 
 """
 
 CUSTOM_TYPE = 0x0000
@@ -61,9 +62,9 @@ TimeType = 0x0012
 ShortType = 0x0013
 ByteType = 0x0014
 DurationType = 0x0015
-JsonType = 0x0019
 ListType = 0x0020
 MapType = 0x0021
 SetType = 0x0022
 UserType = 0x0030
 TupleType = 0x0031
+JsonType = 0x0080
