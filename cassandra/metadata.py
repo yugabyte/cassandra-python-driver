@@ -1455,7 +1455,7 @@ class TableMetadataV3(TableMetadata):
     compaction_options = {}
 
     option_maps = [
-        'compaction', 'compression', 'caching',
+        'compaction', 'compression', 'caching', 'transactions'
         'nodesync'  # added DSE 6.0
     ]
 
@@ -1658,15 +1658,48 @@ class IndexMetadata(object):
     kind = None
     """ A string representing the kind of index (COMPOSITE, CUSTOM,...). """
 
+    is_unique = False
+    """ Whether this is a unique index. """
+
+    partition_key = None
+    """
+    A list of :class:`.ColumnMetadata` instances representing the columns in
+    the partition key for this index.  This will always hold at least one
+    column.
+    """
+
+    clustering_key = None
+    """
+    A list of :class:`.ColumnMetadata` instances representing the columns
+    in the clustering key for this index.  These are all of the
+    :attr:`.primary_key` columns that are not in the :attr:`.partition_key`.
+
+    Note that an index may have no clustering keys, in which case this will
+    be an empty list.
+    """
+
+    columns = None
+    """
+    A dict mapping column names to :class:`.ColumnMetadata` instances.
+    """
+
     index_options = {}
     """ A dict of index options. """
 
-    def __init__(self, keyspace_name, table_name, index_name, kind, index_options):
+    transactions_options = None
+    """ Transactions options for this index. """
+
+    def __init__(self, keyspace_name, table_name, index_name, kind, is_unique, index_options, transactions_options):
         self.keyspace_name = keyspace_name
         self.table_name = table_name
         self.name = index_name
         self.kind = kind
+        self.is_unique = is_unique
+        self.partition_key = []
+        self.clustering_key = []
+        self.columns = OrderedDict()
         self.index_options = index_options
+        self.transactions_options = transactions_options
 
     def as_cql_query(self):
         """
@@ -1675,11 +1708,19 @@ class IndexMetadata(object):
         options = dict(self.index_options)
         index_target = options.pop("target")
         if self.kind != "CUSTOM":
-            return "CREATE INDEX %s ON %s.%s (%s)" % (
+            ret = "CREATE %sINDEX %s ON %s.%s (%s)" % (
+                "UNIQUE " if self.is_unique else "",
                 protect_name(self.name),
                 protect_name(self.keyspace_name),
                 protect_name(self.table_name),
                 index_target)
+            index_include = options.pop("include", None)
+            if index_include:
+                ret += " INCLUDE (%s)" % index_include
+            options["transactions"] = self.transactions_options
+            properties = TableMetadataV3._property_string(True, self.clustering_key, options)
+            ret += "\n    WITH %s" % properties
+            return ret
         else:
             class_name = options.pop("class_name")
             ret = "CREATE CUSTOM INDEX %s ON %s.%s (%s) USING '%s'" % (
@@ -2507,7 +2548,8 @@ class SchemaParserV3(SchemaParserV22):
         'memtable_flush_period_in_ms',
         'min_index_interval',
         'read_repair_chance',
-        'speculative_retry')
+        'speculative_retry',
+        "transactions")
 
     def __init__(self, connection, timeout):
         super(SchemaParserV3, self).__init__(connection, timeout)
@@ -2674,13 +2716,17 @@ class SchemaParserV3(SchemaParserV22):
         column_meta = ColumnMetadata(table_metadata, name, cql_type, is_static, is_reversed)
         return column_meta
 
-    @staticmethod
-    def _build_index_metadata(table_metadata, row):
+    def _build_index_metadata(self, table_metadata, row):
         index_name = row.get("index_name")
         kind = row.get("kind")
         if index_name or kind:
+            is_unique = row.get("is_unique")
             index_options = row.get("options")
-            return IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, index_options)
+            transactions_options = row.get("transactions")
+            index_meta = IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, is_unique, index_options, transactions_options)
+            col_rows = self.keyspace_table_col_rows[table_metadata.keyspace_name][index_name]
+            self._build_table_columns(index_meta, col_rows)
+            return index_meta
         else:
             return None
 
