@@ -409,11 +409,11 @@ def run_setup(extensions):
         dependencies.append('futures')
 
     setup(
-        name='cassandra-driver',
+        name='yb-cassandra-driver',
         version=__version__,
         description='Python driver for Cassandra',
         long_description=long_description,
-        url='http://github.com/datastax/python-driver',
+        url='Python driver for Yugabyte DB Cassandra comptatible YCQL API',
         author='Tyler Hobbs',
         author_email='tyler@datastax.com',
         packages=['cassandra', 'cassandra.io', 'cassandra.cqlengine'],
