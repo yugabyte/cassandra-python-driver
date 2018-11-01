@@ -414,25 +414,15 @@ def run_setup(extensions):
     }
 
     setup(
-        name='cassandra-driver',
+        name='yb-cassandra-driver',
         version=__version__,
         description=' DataStax Driver for Apache Cassandra',
         long_description=long_description,
-        long_description_content_type='text/x-rst',
-        url='http://github.com/datastax/python-driver',
-        project_urls={
-            'Documentation': 'https://docs.datastax.com/en/developer/python-driver/latest/',
-            'Source': 'https://github.com/datastax/python-driver/',
-            'Issues': 'https://datastax-oss.atlassian.net/browse/PYTHON',
-        },
-        author='DataStax',
-        packages=[
-            'cassandra', 'cassandra.io', 'cassandra.cqlengine', 'cassandra.graph',
-            'cassandra.datastax', 'cassandra.datastax.insights', 'cassandra.datastax.graph',
-            'cassandra.datastax.graph.fluent', 'cassandra.datastax.cloud',
-            "cassandra.column_encryption"
-        ],
-        keywords='cassandra,cql,orm,dse,graph',
+        url='Python driver for Yugabyte DB Cassandra comptatible YCQL API',
+        author='Tyler Hobbs',
+        author_email='tyler@datastax.com',
+        packages=['cassandra', 'cassandra.io', 'cassandra.cqlengine'],
+        keywords='cassandra,cql,orm',
         include_package_data=True,
         install_requires=dependencies,
         extras_require=_EXTRAS_REQUIRE,
