@@ -1,4 +1,4 @@
-YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API.
+YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API
 ===========================================
 
 .. image:: https://travis-ci.com/datastax/python-driver.png?branch=master
