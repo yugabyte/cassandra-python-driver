@@ -31,7 +31,7 @@ Installation
 ------------
 Installation through pip is recommended::
 
-    $ pip install cassandra-driver
+    $ pip install yb-cassandra-driver
 
 For more complete installation instructions, see the
 `installation guide <http://datastax.github.io/python-driver/installation.html>`_.
