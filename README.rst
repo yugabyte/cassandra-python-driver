@@ -9,6 +9,10 @@ The driver supports Python Python 3.8 through 3.12.
 
 **Note:** This driver does not support big-endian systems.
 
+Feedback Requested
+------------------
+Please provide feedback by opening an issue on github.
+
 Features
 --------
 * `Synchronous <http://datastax.github.io/python-driver/api/cassandra/cluster.html#cassandra.cluster.Session.execute>`_ and `Asynchronous <http://datastax.github.io/python-driver/api/cassandra/cluster.html#cassandra.cluster.Session.execute_async>`_ APIs
