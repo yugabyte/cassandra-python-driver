@@ -57,7 +57,7 @@ community) is now maintained as an integral part of this package. Refer to
 
 Contributing
 ------------
-See `CONTRIBUTING.md <https://github.com/datastax/python-driver/blob/master/CONTRIBUTING.rst>`_.
+See `CONTRIBUTING.md <https://github.com/YugaByte/cassandra-python-driver/blob/master/CONTRIBUTING.rst>`_.
 
 Error Handling
 --------------
