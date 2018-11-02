@@ -1,15 +1,13 @@
 YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API
 ======================================================================
 
-.. image:: https://travis-ci.com/datastax/python-driver.png?branch=master
-   :target: https://travis-ci.com/github/datastax/python-driver
 
-A modern, `feature-rich <https://github.com/datastax/python-driver#features>`_ and highly-tunable Python client library for Apache Cassandra (2.1+) and
-DataStax Enterprise (4.7+) using exclusively Cassandra's binary protocol and Cassandra Query Language v3.
+A modern, `feature-rich <https://github.com/yugabyte/cassandra-python-driver#features>`_ and highly-tunable Python client library for Apache Cassandra (2.1+) using exclusively Cassandra's binary protocol and Cassandra Query Language v3.
 
-The driver supports Python 3.8 through 3.12.
+The driver supports Python Python 3.8 through 3.12.
 
-**Note:** DataStax products do not support big-endian systems.
+
+**Note:** This driver does not support big-endian systems.
 
 Features
 --------
@@ -63,16 +61,11 @@ While originally written for the Java driver, users may reference the `Cassandra
 
 Reporting Problems
 ------------------
-Please report any bugs and make any feature requests on the
-`JIRA <https://datastax-oss.atlassian.net/browse/PYTHON>`_ issue tracker.
-
-If you would like to contribute, please feel free to open a pull request.
+Please report any bugs and make any feature requests on github.
 
 Getting Help
 ------------
-Your best options for getting help with the driver are the
-`mailing list <https://groups.google.com/a/lists.datastax.com/forum/#!forum/python-driver-user>`_
-and the `DataStax Community <https://community.datastax.com>`_.
+For help on this product, please open a github issue.
 
 License
 -------
