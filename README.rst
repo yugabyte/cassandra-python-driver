@@ -1,5 +1,5 @@
 YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API
-===========================================
+======================================================================
 
 .. image:: https://travis-ci.org/datastax/python-driver.png?branch=master
    :target: https://travis-ci.org/datastax/python-driver
@@ -43,8 +43,8 @@ The documentation can be found online `here <http://datastax.github.io/python-dr
 
 A couple of links for getting up to speed:
 
-* `Installation <http://datastax.github.io/python-driver/installation.html>`_
-* `Getting started guide <http://datastax.github.io/python-driver/getting_started.html>`_
+
+* `Getting started guide <https://docs.yugabyte.com/latest/develop/client-drivers/python/>`_
 * `API docs <http://datastax.github.io/python-driver/api/index.html>`_
 * `Performance tips <http://datastax.github.io/python-driver/performance.html>`_
 
@@ -73,7 +73,7 @@ and the ``#datastax-drivers`` channel in the `DataStax Academy Slack <https://ac
 
 License
 -------
-Copyright 2013-2017 DataStax
+Copyright 2018, YugaByte Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
