@@ -40,10 +40,7 @@ For more complete installation instructions, see the
 
 Documentation
 -------------
-The documentation can be found online `here <http://datastax.github.io/python-driver/index.html>`_.
-
 A couple of links for getting up to speed:
-
 
 * `Getting started guide <https://docs.yugabyte.com/latest/develop/client-drivers/python/>`_
 * `API docs <http://datastax.github.io/python-driver/api/index.html>`_
