@@ -2,7 +2,7 @@ YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API
 ======================================================================
 
 
-A modern, `feature-rich <https://github.com/yugabyte/cassandra-python-driver#features>`_ and highly-tunable Python client library for Apache Cassandra (2.1+) using exclusively Cassandra's binary protocol and Cassandra Query Language v3.
+A modern, `feature-rich <https://github.com/yugabyte/cassandra-python-driver#features>`_ and highly-tunable Python client library for YugaByte DB's Cassandra compatible YCQL API using Cassandra's binary protocol and Cassandra Query Language v3.
 
 The driver supports Python Python 3.8 through 3.12.
 
@@ -49,11 +49,6 @@ A couple of links for getting up to speed:
 * `API docs <http://datastax.github.io/python-driver/api/index.html>`_
 * `Performance tips <http://datastax.github.io/python-driver/performance.html>`_
 
-Object Mapper
--------------
-cqlengine (originally developed by Blake Eggleston and Jon Haddad, with contributions from the
-community) is now maintained as an integral part of this package. Refer to
-`documentation here <http://datastax.github.io/python-driver/object_mapper.html>`_.
 
 Contributing
 ------------
