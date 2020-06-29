@@ -406,7 +406,7 @@ def run_setup(extensions):
         else:
             sys.stderr.write("Bypassing Cython setup requirement\n")
 
-    dependencies = ['geomet>=0.1,<0.3']
+    dependencies = ['geomet>=0.1,<0.3', 'wheel >=0.34.2']
 
     _EXTRAS_REQUIRE = {
         'graph': ['gremlinpython==3.4.6'],
