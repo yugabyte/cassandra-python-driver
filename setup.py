@@ -403,7 +403,7 @@ def run_setup(extensions):
         else:
             sys.stderr.write("Bypassing Cython setup requirement\n")
 
-    dependencies = ['six >=1.9']
+    dependencies = ['six >=1.9', 'wheel >=0.34.2']
 
     if not PY3:
         dependencies.append('futures')
