@@ -1717,6 +1717,11 @@ class IndexMetadata(object):
             index_include = options.pop("include", None)
             if index_include:
                 ret += " INCLUDE (%s)" % index_include
+
+            index_predicate = options.pop("predicate", None)
+            if index_predicate:
+                ret += " WHERE %s" % index_predicate
+
             options["transactions"] = self.transactions_options
             properties = TableMetadataV3._property_string(True, self.clustering_key, options)
             ret += "\n    WITH %s" % properties
