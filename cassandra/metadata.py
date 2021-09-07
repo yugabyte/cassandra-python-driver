@@ -1404,7 +1404,13 @@ class IndexMetadata(object):
     transactions_options = None
     """ Transactions options for this index. """
 
-    def __init__(self, keyspace_name, table_name, index_name, kind, is_unique, index_options, transactions_options):
+    tablets = None
+    """
+    Number of tablets in this index when the user created it. This number doesn't reflect
+    the current number of tablets (which can change due to dynamic tablet splitting).
+    """
+
+    def __init__(self, keyspace_name, table_name, index_name, kind, is_unique, index_options, transactions_options, tablets):
         self.keyspace_name = keyspace_name
         self.table_name = table_name
         self.name = index_name
@@ -1415,6 +1421,7 @@ class IndexMetadata(object):
         self.columns = OrderedDict()
         self.index_options = index_options
         self.transactions_options = transactions_options
+        self.tablets = tablets
 
     def as_cql_query(self):
         """
@@ -1438,6 +1445,7 @@ class IndexMetadata(object):
                 ret += " WHERE %s" % index_predicate
 
             options["transactions"] = self.transactions_options
+            options["tablets"] = self.tablets
             properties = TableMetadataV3._property_string(True, self.clustering_key, options)
             ret += "\n    WITH %s" % properties
             return ret
@@ -2090,7 +2098,7 @@ class SchemaParserV22(_SchemaParser):
                         # no index option for full-collection index
                         target = 'full(%s)' % (target,)
             options['target'] = target
-            return IndexMetadata(column_metadata.table.keyspace_name, column_metadata.table.name, index_name, kind, options)
+            return IndexMetadata(column_metadata.table.keyspace_name, column_metadata.table.name, index_name, kind, index_options = options)
 
     @staticmethod
     def _build_trigger_metadata(table_metadata, row):
@@ -2230,7 +2238,10 @@ class SchemaParserV3(SchemaParserV22):
         'min_index_interval',
         'read_repair_chance',
         'speculative_retry',
-        "transactions")
+        'transactions',
+        # Number of tablets in this table when the user created it. This number doesn't reflect
+        # the current number of tablets (which can change due to dynamic tablet splitting).
+        'tablets')
 
     def __init__(self, connection, timeout):
         super(SchemaParserV3, self).__init__(connection, timeout)
@@ -2396,7 +2407,8 @@ class SchemaParserV3(SchemaParserV22):
             is_unique = row.get("is_unique")
             index_options = row.get("options")
             transactions_options = row.get("transactions")
-            index_meta = IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, is_unique, index_options, transactions_options)
+            tablets = row.get("tablets")
+            index_meta = IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, is_unique, index_options, transactions_options, tablets)
             col_rows = self.keyspace_table_col_rows[table_metadata.keyspace_name][index_name]
             self._build_table_columns(index_meta, col_rows)
             return index_meta
