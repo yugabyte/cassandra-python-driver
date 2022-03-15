@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # noqa
+import unittest
 
 import mock
 
 from cassandra import timestamps
-import time
 from threading import Thread, Lock
+
 
 class _TimestampTestMixin(object):
 
@@ -61,6 +58,8 @@ class TestTimestampGeneratorOutput(unittest.TestCase, _TimestampTestMixin):
 
     def test_timestamps_during_and_after_same_system_time(self):
         """
+        Timestamps should increase monotonically over repeated system time.
+
         Test that MonotonicTimestampGenerator's output increases by 1 when the
         underlying system time is the same, then returns to normal when the
         system time increases again.
@@ -79,13 +78,11 @@ class TestTimestampGeneratorOutput(unittest.TestCase, _TimestampTestMixin):
 
     def test_timestamps_during_and_after_backwards_system_time(self):
         """
+        Timestamps should increase monotonically over system time going backwards.
+
         Test that MonotonicTimestampGenerator's output increases by 1 when the
         underlying system time goes backward, then returns to normal when the
         system time increases again.
-
-        @since 3.8.0
-        @expected_result Timestamps should increase monotonically over system time going backwards.
-        @test_category timing
         """
         self._call_and_check_results(
             system_time_expected_stamp_pairs=(

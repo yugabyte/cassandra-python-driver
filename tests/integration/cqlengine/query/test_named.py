@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # noqa
+import unittest
 
 from cassandra import ConsistencyLevel
 from cassandra.cqlengine import operators
@@ -335,7 +332,7 @@ class TestNamedWithMV(BasicSharedKeyspaceUnitTestCase):
                         SELECT * FROM {0}.scores
                         WHERE game IS NOT NULL AND score IS NOT NULL AND user IS NOT NULL AND year IS NOT NULL AND month IS NOT NULL AND day IS NOT NULL
                         PRIMARY KEY (game, score, user, year, month, day)
-                        WITH CLUSTERING ORDER BY (score DESC)""".format(ks)
+                        WITH CLUSTERING ORDER BY (score DESC, user DESC, year DESC, month DESC, day DESC)""".format(ks)
 
         self.session.execute(create_mv_alltime)
 

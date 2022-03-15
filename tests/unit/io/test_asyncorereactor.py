@@ -11,13 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest # noqa
+import unittest
 
 from mock import patch
 import socket
+import cassandra.io.asyncorereactor as asyncorereactor
 from cassandra.io.asyncorereactor import AsyncoreConnection
 from tests import is_monkey_patched
 from tests.unit.io.utils import ReactorTestMixin, TimerTestMixin, noop_if_monkey_patched
@@ -76,7 +74,7 @@ class TestAsyncoreTimer(TimerTestMixin, AsyncorePatcher):
 
     @property
     def _timers(self):
-        return self.connection._loop._timers
+        return asyncorereactor._global_loop._timers
 
     def setUp(self):
         if is_monkey_patched():

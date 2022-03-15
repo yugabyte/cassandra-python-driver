@@ -13,10 +13,7 @@
 # limitations under the License.
 from cassandra.query import named_tuple_factory, dict_factory, tuple_factory
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest # noqa
+import unittest
 
 from mock import Mock, PropertyMock, patch
 
@@ -33,12 +30,25 @@ class ResultSetTests(unittest.TestCase):
 
     def test_iter_paged(self):
         expected = list(range(10))
-        response_future = Mock(has_more_pages=True)
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
         response_future.result.side_effect = (ResultSet(Mock(), expected[-5:]), )  # ResultSet is iterable, so it must be protected in order to be returned whole by the Mock
         rs = ResultSet(response_future, expected[:5])
         itr = iter(rs)
         # this is brittle, depends on internal impl details. Would like to find a better way
         type(response_future).has_more_pages = PropertyMock(side_effect=(True, True, False))  # after init to avoid side effects being consumed by init
+        self.assertListEqual(list(itr), expected)
+
+    def test_iter_paged_with_empty_pages(self):
+        expected = list(range(10))
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
+        response_future.result.side_effect = [
+            ResultSet(Mock(), []),
+            ResultSet(Mock(), [0, 1, 2, 3, 4]),
+            ResultSet(Mock(), []),
+            ResultSet(Mock(), [5, 6, 7, 8, 9]),
+        ]
+        rs = ResultSet(response_future, [])
+        itr = iter(rs)
         self.assertListEqual(list(itr), expected)
 
     def test_list_non_paged(self):
@@ -52,7 +62,7 @@ class ResultSetTests(unittest.TestCase):
     def test_list_paged(self):
         # list access on RS for backwards-compatibility
         expected = list(range(10))
-        response_future = Mock(has_more_pages=True)
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
         response_future.result.side_effect = (ResultSet(Mock(), expected[-5:]), )  # ResultSet is iterable, so it must be protected in order to be returned whole by the Mock
         rs = ResultSet(response_future, expected[:5])
         # this is brittle, depends on internal impl details. Would like to find a better way
@@ -85,7 +95,7 @@ class ResultSetTests(unittest.TestCase):
         self.assertFalse(list(rs))
 
         # RuntimeError if indexing during or after pages
-        response_future = Mock(has_more_pages=True)
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
         response_future.result.side_effect = (ResultSet(Mock(), expected[-5:]), )  # ResultSet is iterable, so it must be protected in order to be returned whole by the Mock
         rs = ResultSet(response_future, expected[:5])
         type(response_future).has_more_pages = PropertyMock(side_effect=(True, False))
@@ -118,7 +128,7 @@ class ResultSetTests(unittest.TestCase):
         self.assertTrue(rs)
 
         # pages
-        response_future = Mock(has_more_pages=True)
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
         response_future.result.side_effect = (ResultSet(Mock(), expected[-5:]), )  # ResultSet is iterable, so it must be protected in order to be returned whole by the Mock
         rs = ResultSet(response_future, expected[:5])
         # this is brittle, depends on internal impl details. Would like to find a better way
@@ -146,7 +156,7 @@ class ResultSetTests(unittest.TestCase):
         self.assertTrue(rs)
 
         # pages
-        response_future = Mock(has_more_pages=True)
+        response_future = Mock(has_more_pages=True, _continuous_paging_session=None)
         response_future.result.side_effect = (ResultSet(Mock(), expected[-5:]), )  # ResultSet is iterable, so it must be protected in order to be returned whole by the Mock
         rs = ResultSet(response_future, expected[:5])
         type(response_future).has_more_pages = PropertyMock(side_effect=(True, True, True, False))
@@ -194,6 +204,13 @@ class ResultSetTests(unittest.TestCase):
         rs = ResultSet(Mock(has_more_pages=False), [first, second])
 
         self.assertEqual(rs.one(), first)
+
+    def test_all(self):
+        first, second = Mock(), Mock()
+        rs1 = ResultSet(Mock(has_more_pages=False), [first, second])
+        rs2 = ResultSet(Mock(has_more_pages=False), [first, second])
+
+        self.assertEqual(rs1.all(), list(rs2))
 
     @patch('cassandra.cluster.warn')
     def test_indexing_deprecation(self, mocked_warn):
