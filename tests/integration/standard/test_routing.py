@@ -11,19 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # noqa
+import unittest
 
 from uuid import uuid1
 
 import logging
 log = logging.getLogger(__name__)
 
-from cassandra.cluster import Cluster
-
-from tests.integration import use_singledc, PROTOCOL_VERSION
+from tests.integration import use_singledc, TestCluster
 
 
 def setup_module():
@@ -38,7 +33,7 @@ class RoutingTests(unittest.TestCase):
 
     @classmethod
     def setup_class(cls):
-        cls.cluster = Cluster(protocol_version=PROTOCOL_VERSION)
+        cls.cluster = TestCluster()
         cls.session = cls.cluster.connect('test1rf')
 
     @classmethod

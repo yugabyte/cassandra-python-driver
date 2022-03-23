@@ -28,7 +28,7 @@ except ImportError:
     from cassandra.util import WeakSet  # NOQA
 
 from cassandra import AuthenticationFailed
-from cassandra.connection import ConnectionException
+from cassandra.connection import ConnectionException, EndPoint, DefaultEndPoint
 from cassandra.policies import HostDistance
 
 log = logging.getLogger(__name__)
@@ -48,23 +48,67 @@ class Host(object):
     Represents a single Cassandra node.
     """
 
-    address = None
+    endpoint = None
     """
-    The IP address of the node. This is the RPC address the driver uses when connecting to the node
+    The :class:`~.connection.EndPoint` to connect to the node.
     """
 
     broadcast_address = None
     """
-    broadcast address configured for the node, *if available* ('peer' in system.peers table).
-    This is not present in the ``system.local`` table for older versions of Cassandra. It is also not queried if
-    :attr:`~.Cluster.token_metadata_enabled` is ``False``.
+    broadcast address configured for the node, *if available*:
+
+    'system.local.broadcast_address' or 'system.peers.peer' (Cassandra 2-3)
+    'system.local.broadcast_address' or 'system.peers_v2.peer' (Cassandra 4)
+
+    This is not present in the ``system.local`` table for older versions of Cassandra. It
+    is also not queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
+    """
+
+    broadcast_port = None
+    """
+    broadcast port configured for the node, *if available*:
+
+    'system.local.broadcast_port' or 'system.peers_v2.peer_port' (Cassandra 4)
+
+    It is also not queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
+    """
+
+    broadcast_rpc_address = None
+    """
+    The broadcast rpc address of the node:
+
+    'system.local.rpc_address' or 'system.peers.rpc_address' (Cassandra 3)
+    'system.local.rpc_address' or 'system.peers.native_transport_address (DSE  6+)'
+    'system.local.rpc_address' or 'system.peers_v2.native_address (Cassandra 4)'
+    """
+
+    broadcast_rpc_port = None
+    """
+    The broadcast rpc port of the node, *if available*:
+    
+    'system.local.rpc_port' or 'system.peers.native_transport_port' (DSE 6+)
+    'system.local.rpc_port' or 'system.peers_v2.native_port' (Cassandra 4)
     """
 
     listen_address = None
     """
-    listen address configured for the node, *if available*. This is only available in the ``system.local`` table for newer
-    versions of Cassandra. It is also not queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
-    Usually the same as ``broadcast_address`` unless configured differently in cassandra.yaml.
+    listen address configured for the node, *if available*:
+
+    'system.local.listen_address'
+
+    This is only available in the ``system.local`` table for newer versions of Cassandra. It is also not
+    queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``. Usually the same as ``broadcast_address``
+    unless configured differently in cassandra.yaml.
+    """
+
+    listen_port = None
+    """
+    listen port configured for the node, *if available*:
+
+    'system.local.listen_port'
+
+    This is only available in the ``system.local`` table for newer versions of Cassandra. It is also not
+    queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
     """
 
     conviction_policy = None
@@ -85,6 +129,11 @@ class Host(object):
     release_version as queried from the control connection system tables
     """
 
+    host_id = None
+    """
+    The unique identifier of the cassandra node
+    """
+
     dse_version = None
     """
     dse_version as queried from the control connection system tables. Only populated when connecting to
@@ -95,6 +144,15 @@ class Host(object):
     """
     DSE workload queried from the control connection system tables. Only populated when connecting to
     DSE with this property available. Not queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
+    This is a legacy attribute that does not portray multiple workloads in a uniform fashion.
+    See also :attr:`~.Host.dse_workloads`.
+    """
+
+    dse_workloads = None
+    """
+    DSE workloads set, queried from the control connection system tables. Only populated when connecting to
+    DSE with this property available (added in DSE 5.1).
+    Not queried if :attr:`~.Cluster.token_metadata_enabled` is ``False``.
     """
 
     _datacenter = None
@@ -104,16 +162,25 @@ class Host(object):
 
     _currently_handling_node_up = False
 
-    def __init__(self, inet_address, conviction_policy_factory, datacenter=None, rack=None):
-        if inet_address is None:
-            raise ValueError("inet_address may not be None")
+    def __init__(self, endpoint, conviction_policy_factory, datacenter=None, rack=None, host_id=None):
+        if endpoint is None:
+            raise ValueError("endpoint may not be None")
         if conviction_policy_factory is None:
             raise ValueError("conviction_policy_factory may not be None")
 
-        self.address = inet_address
+        self.endpoint = endpoint if isinstance(endpoint, EndPoint) else DefaultEndPoint(endpoint)
         self.conviction_policy = conviction_policy_factory(self)
+        self.host_id = host_id
         self.set_location_info(datacenter, rack)
         self.lock = RLock()
+
+    @property
+    def address(self):
+        """
+        The IP address of the endpoint. This is the RPC address the driver uses when connecting to the node.
+        """
+        # backward compatibility
+        return self.endpoint.address
 
     @property
     def datacenter(self):
@@ -136,7 +203,7 @@ class Host(object):
 
     def set_up(self):
         if not self.is_up:
-            log.debug("Host %s is now marked up", self.address)
+            log.debug("Host %s is now marked up", self.endpoint)
         self.conviction_policy.reset()
         self.is_up = True
 
@@ -160,20 +227,23 @@ class Host(object):
             return old
 
     def __eq__(self, other):
-        return self.address == other.address
+        if isinstance(other, Host):
+            return self.endpoint == other.endpoint
+        else:  # TODO Backward compatibility, remove next major
+            return self.endpoint.address == other
 
     def __hash__(self):
-        return hash(self.address)
+        return hash(self.endpoint)
 
     def __lt__(self, other):
-        return self.address < other.address
+        return self.endpoint < other.endpoint
 
     def __str__(self):
-        return str(self.address)
+        return str(self.endpoint)
 
     def __repr__(self):
         dc = (" %s" % (self._datacenter,)) if self._datacenter else ""
-        return "<%s: %s%s>" % (self.__class__.__name__, self.address, dc)
+        return "<%s: %s%s>" % (self.__class__.__name__, self.endpoint, dc)
 
 
 class _ReconnectionHandler(object):
@@ -320,6 +390,10 @@ class HostConnection(object):
         # this is used in conjunction with the connection streams. Not using the connection lock because the connection can be replaced in the lifetime of the pool.
         self._stream_available_condition = Condition(self._lock)
         self._is_replacing = False
+        # Contains connections which shouldn't be used anymore
+        # and are waiting until all requests time out or complete
+        # so that we can dispose of them.
+        self._trash = set()
 
         if host_distance == HostDistance.IGNORED:
             log.debug("Not opening connection to ignored host %s", self.host)
@@ -329,13 +403,13 @@ class HostConnection(object):
             return
 
         log.debug("Initializing connection for host %s", self.host)
-        self._connection = session.cluster.connection_factory(host.address)
+        self._connection = session.cluster.connection_factory(host.endpoint, on_orphaned_stream_released=self.on_orphaned_stream_released)
         self._keyspace = session.keyspace
         if self._keyspace:
             self._connection.set_keyspace_blocking(self._keyspace)
         log.debug("Finished initializing connection for host %s", self.host)
 
-    def borrow_connection(self, timeout):
+    def _get_connection(self):
         if self.is_shutdown:
             raise ConnectionException(
                 "Pool for %s is shutdown" % (self.host,), self.host)
@@ -343,12 +417,25 @@ class HostConnection(object):
         conn = self._connection
         if not conn:
             raise NoConnectionsAvailable()
+        return conn
+
+    def borrow_connection(self, timeout):
+        conn = self._get_connection()
+        if conn.orphaned_threshold_reached:
+            with self._lock:
+                if not self._is_replacing:
+                    self._is_replacing = True
+                    self._session.submit(self._replace, conn)
+                    log.debug(
+                        "Connection to host %s reached orphaned stream limit, replacing...",
+                        self.host
+                    )
 
         start = time.time()
         remaining = timeout
         while True:
             with conn.lock:
-                if conn.in_flight <= conn.max_request_id:
+                if not (conn.orphaned_threshold_reached and conn.is_closed) and conn.in_flight < conn.max_request_id:
                     conn.in_flight += 1
                     return conn, conn.get_request_id()
             if timeout is not None:
@@ -356,15 +443,19 @@ class HostConnection(object):
                 if remaining < 0:
                     break
             with self._stream_available_condition:
-                self._stream_available_condition.wait(remaining)
+                if conn.orphaned_threshold_reached and conn.is_closed:
+                    conn = self._get_connection()
+                else:
+                    self._stream_available_condition.wait(remaining)
 
         raise NoConnectionsAvailable("All request IDs are currently in use")
 
-    def return_connection(self, connection):
-        with connection.lock:
-            connection.in_flight -= 1
-        with self._stream_available_condition:
-            self._stream_available_condition.notify()
+    def return_connection(self, connection, stream_was_orphaned=False):
+        if not stream_was_orphaned:
+            with connection.lock:
+                connection.in_flight -= 1
+            with self._stream_available_condition:
+                self._stream_available_condition.notify()
 
         if connection.is_defunct or connection.is_closed:
             if connection.signaled_error and not self.shutdown_on_error:
@@ -391,6 +482,24 @@ class HostConnection(object):
                         return
                     self._is_replacing = True
                     self._session.submit(self._replace, connection)
+        else:
+            if connection in self._trash:
+                with connection.lock:
+                    if connection.in_flight == len(connection.orphaned_request_ids):
+                        with self._lock:
+                            if connection in self._trash:
+                                self._trash.remove(connection)
+                                log.debug("Closing trashed connection (%s) to %s", id(connection), self.host)
+                                connection.close()
+                return
+
+    def on_orphaned_stream_released(self):
+        """
+        Called when a response for an orphaned stream (timed out on the client
+        side) was received.
+        """
+        with self._stream_available_condition:
+            self._stream_available_condition.notify()
 
     def _replace(self, connection):
         with self._lock:
@@ -399,17 +508,23 @@ class HostConnection(object):
 
         log.debug("Replacing connection (%s) to %s", id(connection), self.host)
         try:
-            conn = self._session.cluster.connection_factory(self.host.address)
+            conn = self._session.cluster.connection_factory(self.host.endpoint, on_orphaned_stream_released=self.on_orphaned_stream_released)
             if self._keyspace:
                 conn.set_keyspace_blocking(self._keyspace)
             self._connection = conn
         except Exception:
-            log.warning("Failed reconnecting %s. Retrying." % (self.host.address,))
+            log.warning("Failed reconnecting %s. Retrying." % (self.host.endpoint,))
             self._session.submit(self._replace, connection)
         else:
-            with self._lock:
-                self._is_replacing = False
-                self._stream_available_condition.notify()
+            with connection.lock:
+                with self._lock:
+                    if connection.orphaned_threshold_reached:
+                        if connection.in_flight == len(connection.orphaned_request_ids):
+                            connection.close()
+                        else:
+                            self._trash.add(connection)
+                    self._is_replacing = False
+                    self._stream_available_condition.notify()
 
     def shutdown(self):
         with self._lock:
@@ -422,6 +537,16 @@ class HostConnection(object):
         if self._connection:
             self._connection.close()
             self._connection = None
+
+        trash_conns = None
+        with self._lock:
+            if self._trash:
+                trash_conns = self._trash
+                self._trash = set()
+
+        if trash_conns is not None:
+            for conn in self._trash:
+                conn.close()
 
     def _set_keyspace_for_all_conns(self, keyspace, callback):
         if self.is_shutdown or not self._connection:
@@ -478,7 +603,7 @@ class HostConnectionPool(object):
 
         log.debug("Initializing new connection pool for host %s", self.host)
         core_conns = session.cluster.get_core_connections_per_host(host_distance)
-        self._connections = [session.cluster.connection_factory(host.address)
+        self._connections = [session.cluster.connection_factory(host.endpoint, on_orphaned_stream_released=self.on_orphaned_stream_released)
                              for i in range(core_conns)]
 
         self._keyspace = session.keyspace
@@ -582,7 +707,7 @@ class HostConnectionPool(object):
 
         log.debug("Going to open new connection to host %s", self.host)
         try:
-            conn = self._session.cluster.connection_factory(self.host.address)
+            conn = self._session.cluster.connection_factory(self.host.endpoint, on_orphaned_stream_released=self.on_orphaned_stream_released)
             if self._keyspace:
                 conn.set_keyspace_blocking(self._session.keyspace)
             self._next_trash_allowed_at = time.time() + _MIN_TRASH_INTERVAL
@@ -642,9 +767,10 @@ class HostConnectionPool(object):
 
         raise NoConnectionsAvailable()
 
-    def return_connection(self, connection):
+    def return_connection(self, connection, stream_was_orphaned=False):
         with connection.lock:
-            connection.in_flight -= 1
+            if not stream_was_orphaned:
+                connection.in_flight -= 1
             in_flight = connection.in_flight
 
         if connection.is_defunct or connection.is_closed:
@@ -679,6 +805,13 @@ class HostConnectionPool(object):
                 self._maybe_trash_connection(connection)
             else:
                 self._signal_available_conn()
+
+    def on_orphaned_stream_released(self):
+        """
+        Called when a response for an orphaned stream (timed out on the client
+        side) was received.
+        """
+        self._signal_available_conn()
 
     def _maybe_trash_connection(self, connection):
         core_conns = self._session.cluster.get_core_connections_per_host(self.host_distance)

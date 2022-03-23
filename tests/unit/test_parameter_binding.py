@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest # noqa
+import unittest
 
 from cassandra.encoder import Encoder
 from cassandra.protocol import ColumnMetadata
@@ -218,6 +215,7 @@ class BoundStatementTestV4(BoundStatementTestV1):
 
         self.bound.bind((0, 0, 0, UNSET_VALUE))
         self.assertEqual(self.bound.values[-1], UNSET_VALUE)
+
 
 class BoundStatementTestV5(BoundStatementTestV4):
     protocol_version = 5

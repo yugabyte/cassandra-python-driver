@@ -12,25 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # noqa
+import os
+
+from packaging.version import Version
+
+from tests import notwindows
+from tests.unit.cython.utils import notcython
+from tests.integration import (execute_until_pass,
+                               execute_with_long_wait_retry, use_cluster, TestCluster)
+
+import unittest
 
 
-from cassandra.cluster import Cluster
-from tests import notwindows, is_windows
-from tests.integration import use_cluster, CLUSTER_NAME, PROTOCOL_VERSION, execute_until_pass, \
-    execute_with_long_wait_retry
+CCM_IS_DSE = (os.environ.get('CCM_IS_DSE', None) == 'true')
 
 
-def setup_module():
-    if is_windows():
-        return
-    use_cluster(CLUSTER_NAME, [3], dse_cluster=True, dse_options={})
-
-
+@unittest.skipIf(os.environ.get('CCM_ARGS', None), 'environment has custom CCM_ARGS; skipping')
 @notwindows
+@notcython  # no need to double up on this test; also __default__ setting doesn't work
 class DseCCMClusterTest(unittest.TestCase):
     """
     This class can be executed setting the DSE_VERSION variable, for example:
@@ -38,21 +37,37 @@ class DseCCMClusterTest(unittest.TestCase):
     If CASSANDRA_VERSION is set instead, it will be converted to the corresponding DSE_VERSION
     """
 
-    def test_basic(self):
+    def test_dse_5x(self):
+        self._test_basic(Version('5.1.10'))
+
+    def test_dse_60(self):
+        self._test_basic(Version('6.0.2'))
+
+    @unittest.skipUnless(CCM_IS_DSE, 'DSE version unavailable')
+    def test_dse_67(self):
+        self._test_basic(Version('6.7.0'))
+
+    def _test_basic(self, dse_version):
         """
         Test basic connection and usage
         """
+        cluster_name = '{}-{}'.format(
+            self.__class__.__name__, dse_version.base_version.replace('.', '_')
+        )
+        use_cluster(cluster_name=cluster_name, nodes=[3], dse_options={})
 
-        cluster = Cluster(protocol_version=PROTOCOL_VERSION)
+        cluster = TestCluster()
         session = cluster.connect()
-        result = execute_until_pass(session,
+        result = execute_until_pass(
+            session,
             """
             CREATE KEYSPACE clustertests
             WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}
             """)
         self.assertFalse(result)
 
-        result = execute_with_long_wait_retry(session,
+        result = execute_with_long_wait_retry(
+            session,
             """
             CREATE TABLE clustertests.cf0 (
                 a text,
