@@ -1457,7 +1457,7 @@ class TableMetadataV3(TableMetadata):
     compaction_options = {}
 
     option_maps = [
-        'compaction', 'compression', 'caching',
+        'compaction', 'compression', 'caching', 'transactions',
         'nodesync'  # added DSE 6.0
     ]
 
