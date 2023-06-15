@@ -3602,7 +3602,7 @@ class ControlConnection(object):
             shared_results = (peers_result, local_result)
 
             if len(shared_results) < 2:
-                raise DriverException("Database not sending proper response for SELECT on system.local or system.peers table")
+                raise DriverException("Did not receive complete response for SELECT on system.local or system.peers table")
 
             self._refresh_node_list_and_token_map(connection, preloaded_results=shared_results)
             self._refresh_schema(connection, preloaded_results=shared_results, schema_agreement_wait=-1)
@@ -3753,7 +3753,7 @@ class ControlConnection(object):
             found_hosts.add(connection.endpoint)
             local_rows = dict_factory(local_result.column_names, local_result.parsed_rows)
             if len(local_rows) < 1:
-                raise DriverException("Database not sending proper response for SELECT on system.local table")
+                raise DriverException("Did not receive complete response for SELECT on system.local table")
             local_row = local_rows[0]
             cluster_name = local_row["cluster_name"]
             self._cluster.metadata.cluster_name = cluster_name
@@ -3792,7 +3792,7 @@ class ControlConnection(object):
                                 local_rpc_address_result.column_names,
                                 local_rpc_address_result.parsed_rows)
                             if len(row) < 1:
-                                raise DriverException("Database not sending proper response for SELECT on system.local table")
+                                raise DriverException("Did not receive complete response for SELECT on system.local table")
                             host.broadcast_rpc_address = _NodeInfo.get_broadcast_rpc_address(row[0])
                             host.broadcast_rpc_port = _NodeInfo.get_broadcast_rpc_port(row[0])
                         else:
@@ -4009,7 +4009,7 @@ class ControlConnection(object):
         if local_result.parsed_rows:
             local_rows = dict_factory(local_result.column_names, local_result.parsed_rows)
             if len(local_rows) < 1:
-                raise DriverException("Database not sending proper response for SELECT on system.local table")
+                raise DriverException("Did not receive complete response for SELECT on system.local table")
             local_row = local_rows[0]
             if local_row.get("schema_version"):
                 versions[local_row.get("schema_version")].add(local_address)
