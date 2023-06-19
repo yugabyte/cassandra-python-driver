@@ -27,12 +27,14 @@ from functools import partial, wraps
 from itertools import groupby, count, chain
 import json
 import logging
+import os
 from warnings import warn
 from random import random
 import six
 from six.moves import filter, range, queue as Queue
 import socket
 import sys
+import traceback
 import time
 from threading import Lock, RLock, Thread, Event
 import uuid
@@ -3521,11 +3523,17 @@ class ControlConnection(object):
             try:
                 return self._try_connect(host)
             except ConnectionException as exc:
-                errors[str(host.endpoint)] = exc
+                if os.environ.get('TRACEBACK','FALSE').lower() == "true":
+                    errors[str(host.endpoint)] = traceback.format_exc()
+                else:
+                    errors[str(host.endpoint)] = exc
                 log.warning("[control connection] Error connecting to %s:", host, exc_info=True)
                 self._cluster.signal_connection_failure(host, exc, is_host_addition=False)
             except Exception as exc:
-                errors[str(host.endpoint)] = exc
+                if os.environ.get('TRACEBACK','FALSE').lower() == "true":
+                    errors[str(host.endpoint)] = traceback.format_exc()
+                else:
+                    errors[str(host.endpoint)] = exc
                 log.warning("[control connection] Error connecting to %s:", host, exc_info=True)
             if self._is_shutdown:
                 raise DriverException("[control connection] Reconnection in progress during shutdown")
@@ -3592,6 +3600,10 @@ class ControlConnection(object):
                     peers_query, timeout=self._timeout)
 
             shared_results = (peers_result, local_result)
+
+            if len(shared_results) < 2:
+                raise DriverException("Did not receive complete response for SELECT on system.local or system.peers table")
+
             self._refresh_node_list_and_token_map(connection, preloaded_results=shared_results)
             self._refresh_schema(connection, preloaded_results=shared_results, schema_agreement_wait=-1)
         except Exception:
@@ -3740,6 +3752,8 @@ class ControlConnection(object):
         if local_result.parsed_rows:
             found_hosts.add(connection.endpoint)
             local_rows = dict_factory(local_result.column_names, local_result.parsed_rows)
+            if len(local_rows) < 1:
+                raise DriverException("Did not receive complete response for SELECT on system.local table")
             local_row = local_rows[0]
             cluster_name = local_row["cluster_name"]
             self._cluster.metadata.cluster_name = cluster_name
@@ -3777,6 +3791,8 @@ class ControlConnection(object):
                             row = dict_factory(
                                 local_rpc_address_result.column_names,
                                 local_rpc_address_result.parsed_rows)
+                            if len(row) < 1:
+                                raise DriverException("Did not receive complete response for SELECT on system.local table")
                             host.broadcast_rpc_address = _NodeInfo.get_broadcast_rpc_address(row[0])
                             host.broadcast_rpc_port = _NodeInfo.get_broadcast_rpc_port(row[0])
                         else:
@@ -3991,7 +4007,10 @@ class ControlConnection(object):
 
         versions = defaultdict(set)
         if local_result.parsed_rows:
-            local_row = dict_factory(local_result.column_names, local_result.parsed_rows)[0]
+            local_rows = dict_factory(local_result.column_names, local_result.parsed_rows)
+            if len(local_rows) < 1:
+                raise DriverException("Did not receive complete response for SELECT on system.local table")
+            local_row = local_rows[0]
             if local_row.get("schema_version"):
                 versions[local_row.get("schema_version")].add(local_address)
 
