@@ -27,10 +27,12 @@ from itertools import groupby, count
 import logging
 from warnings import warn
 from random import random
+import os
 import six
 from six.moves import filter, range, queue as Queue
 import socket
 import sys
+import traceback
 import time
 from threading import Lock, RLock, Thread, Event
 
@@ -2804,11 +2806,17 @@ class ControlConnection(object):
             try:
                 return self._try_connect(host)
             except ConnectionException as exc:
-                errors[host.address] = exc
+                if os.environ.get('TRACEBACK','FALSE').lower() == "true":
+                    errors[host.address] = traceback.format_exc()
+                else:
+                    errors[host.address] = exc
                 log.warning("[control connection] Error connecting to %s:", host, exc_info=True)
                 self._cluster.signal_connection_failure(host, exc, is_host_addition=False)
             except Exception as exc:
-                errors[host.address] = exc
+                if os.environ.get('TRACEBACK','FALSE').lower() == "true":
+                    errors[host.address] = traceback.format_exc()
+                else:
+                    errors[host.address] = exc
                 log.warning("[control connection] Error connecting to %s:", host, exc_info=True)
             if self._is_shutdown:
                 raise DriverException("[control connection] Reconnection in progress during shutdown")
@@ -2854,6 +2862,9 @@ class ControlConnection(object):
             local_query = QueryMessage(query=sel_local, consistency_level=ConsistencyLevel.ONE)
             shared_results = connection.wait_for_responses(
                 peers_query, local_query, timeout=self._timeout)
+
+            if len(shared_results) < 2:
+                raise DriverException("Database not sending proper response for SELECT on system.local or system.peers table")
 
             self._refresh_node_list_and_token_map(connection, preloaded_results=shared_results)
             self._refresh_schema(connection, preloaded_results=shared_results, schema_agreement_wait=-1)
@@ -3005,6 +3016,8 @@ class ControlConnection(object):
         if local_result.results:
             found_hosts.add(connection.host)
             local_rows = dict_factory(*(local_result.results))
+            if len(local_rows) < 1:
+                raise DriverException("Database not sending proper response for SELECT on system.local table")
             local_row = local_rows[0]
             cluster_name = local_row["cluster_name"]
             self._cluster.metadata.cluster_name = cluster_name
@@ -3214,7 +3227,10 @@ class ControlConnection(object):
 
         versions = defaultdict(set)
         if local_result.results:
-            local_row = dict_factory(*local_result.results)[0]
+            local_rows = dict_factory(*local_result.results)
+            if len(local_rows) < 1:
+                raise DriverException("Database not sending proper response for SELECT on system.local table")
+            local_row = local_rows[0]
             if local_row.get("schema_version"):
                 versions[local_row.get("schema_version")].add(local_address)
 
