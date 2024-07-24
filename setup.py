@@ -416,12 +416,21 @@ def run_setup(extensions):
     setup(
         name='yb-cassandra-driver',
         version=__version__,
-        description=' DataStax Driver for Apache Cassandra',
+        description=' DataStax Driver for YCQL YugabyteDB',
         long_description=long_description,
-        url='http://github.com/YugaByte/cassandra-python-driver',
+        url='http://github.com/yugaByte/cassandra-python-driver',
+        project_urls={
+            'Documentation': 'https://docs.yugabyte.com/stable/drivers-orms/python/ycql/',
+            'Source': 'https://github.com/yugabyte/cassandra-python-driver/',
+        },
         author='yugabyte',
         author_email='pypi@yugabyte.com',
-        packages=['cassandra', 'cassandra.io', 'cassandra.cqlengine'],
+        packages=[
+            'cassandra', 'cassandra.io', 'cassandra.cqlengine', 'cassandra.graph',
+            'cassandra.datastax', 'cassandra.datastax.insights', 'cassandra.datastax.graph',
+            'cassandra.datastax.graph.fluent', 'cassandra.datastax.cloud',
+            "cassandra.column_encryption"
+        ],
         keywords='cassandra,cql,orm',
         include_package_data=True,
         install_requires=dependencies,
