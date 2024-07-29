@@ -15,7 +15,6 @@
 from binascii import unhexlify
 from bisect import bisect_left
 from collections import defaultdict
-from collections import abc
 from collections.abc import Mapping
 from functools import total_ordering
 from hashlib import md5
