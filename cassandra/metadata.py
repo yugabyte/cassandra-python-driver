@@ -15,6 +15,7 @@
 from binascii import unhexlify
 from bisect import bisect_left
 from collections import defaultdict
+from collections import abc
 from collections.abc import Mapping
 from functools import total_ordering
 from hashlib import md5
@@ -1448,7 +1449,7 @@ class TableMetadataV3(TableMetadata):
     compaction_options = {}
 
     option_maps = [
-        'compaction', 'compression', 'caching', 'transactions'
+        'compaction', 'compression', 'caching', 'transactions',
         'nodesync'  # added DSE 6.0
     ]
 
