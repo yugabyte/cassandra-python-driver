@@ -765,6 +765,8 @@ class UTF8Type(_CassandraType):
 class VarcharType(UTF8Type):
     typename = 'varchar'
 
+class JsonType(UTF8Type):
+    typename = 'jsonb'
 
 class _ParameterizedType(_CassandraType):
     num_subtypes = 'UNKNOWN'

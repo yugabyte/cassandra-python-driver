@@ -36,6 +36,8 @@ Type codes are repeated here from the Cassandra binary protocol specification:
                            keys and values of the map
             0x0022    Set: the value is an [option], representing the type
                             of the elements of the set
+
+            0x0080    JsonType 
 """
 
 CUSTOM_TYPE = 0x0000
@@ -65,3 +67,4 @@ MapType = 0x0021
 SetType = 0x0022
 UserType = 0x0030
 TupleType = 0x0031
+JsonType = 0x0080

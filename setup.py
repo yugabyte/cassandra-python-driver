@@ -406,7 +406,7 @@ def run_setup(extensions):
         else:
             sys.stderr.write("Bypassing Cython setup requirement\n")
 
-    dependencies = ['geomet>=0.1,<0.3']
+    dependencies = ['geomet>=0.1,<0.3', 'wheel >=0.34.2']
 
     _EXTRAS_REQUIRE = {
         'graph': ['gremlinpython==3.4.6'],
@@ -414,25 +414,24 @@ def run_setup(extensions):
     }
 
     setup(
-        name='cassandra-driver',
+        name='yb-cassandra-driver',
         version=__version__,
-        description=' DataStax Driver for Apache Cassandra',
+        description=' DataStax Driver for YCQL YugabyteDB',
         long_description=long_description,
-        long_description_content_type='text/x-rst',
-        url='http://github.com/datastax/python-driver',
+        url='http://github.com/yugaByte/cassandra-python-driver',
         project_urls={
-            'Documentation': 'https://docs.datastax.com/en/developer/python-driver/latest/',
-            'Source': 'https://github.com/datastax/python-driver/',
-            'Issues': 'https://datastax-oss.atlassian.net/browse/PYTHON',
+            'Documentation': 'https://docs.yugabyte.com/stable/drivers-orms/python/ycql/',
+            'Source': 'https://github.com/yugabyte/cassandra-python-driver/',
         },
-        author='DataStax',
+        author='yugabyte',
+        author_email='pypi@yugabyte.com',
         packages=[
             'cassandra', 'cassandra.io', 'cassandra.cqlengine', 'cassandra.graph',
             'cassandra.datastax', 'cassandra.datastax.insights', 'cassandra.datastax.graph',
             'cassandra.datastax.graph.fluent', 'cassandra.datastax.cloud',
             "cassandra.column_encryption"
         ],
-        keywords='cassandra,cql,orm,dse,graph',
+        keywords='cassandra,cql,orm',
         include_package_data=True,
         install_requires=dependencies,
         extras_require=_EXTRAS_REQUIRE,

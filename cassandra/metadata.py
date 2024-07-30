@@ -49,20 +49,14 @@ cql_keywords = set((
     'bigint', 'blob', 'boolean', 'by', 'called', 'clustering', 'columnfamily', 'compact', 'contains', 'count',
     'counter', 'create', 'custom', 'date', 'decimal', 'default', 'delete', 'desc', 'describe', 'deterministic', 'distinct', 'double', 'drop',
     'entries', 'execute', 'exists', 'filtering', 'finalfunc', 'float', 'from', 'frozen', 'full', 'function',
-    'functions', 'grant', 'if', 'in', 'index', 'inet', 'infinity', 'initcond', 'input', 'insert', 'int', 'into', 'is', 'json',
+    'functions', 'grant', 'if', 'in', 'index', 'inet', 'infinity', 'initcond', 'input', 'insert',
+    'int', 'into', 'is', 'json', 'jsonb',
     'key', 'keys', 'keyspace', 'keyspaces', 'language', 'limit', 'list', 'login', 'map', 'materialized', 'mbean', 'mbeans', 'modify', 'monotonic',
     'nan', 'nologin', 'norecursive', 'nosuperuser', 'not', 'null', 'of', 'on', 'options', 'or', 'order', 'password', 'permission',
     'permissions', 'primary', 'rename', 'replace', 'returns', 'revoke', 'role', 'roles', 'schema', 'select', 'set',
     'sfunc', 'smallint', 'static', 'storage', 'stype', 'superuser', 'table', 'text', 'time', 'timestamp', 'timeuuid',
     'tinyint', 'to', 'token', 'trigger', 'truncate', 'ttl', 'tuple', 'type', 'unlogged', 'unset', 'update', 'use', 'user',
-    'users', 'using', 'uuid', 'values', 'varchar', 'varint', 'view', 'where', 'with', 'writetime',
-
-    # DSE specifics
-    "node", "nodes", "plan", "active", "application", "applications", "java", "executor", "executors", "std_out", "std_err",
-    "renew", "delegation", "no", "redact", "token", "lowercasestring", "cluster", "authentication", "schemes", "scheme",
-    "internal", "ldap", "kerberos", "remote", "object", "method", "call", "calls", "search", "schema", "config", "rows",
-    "columns", "profiles", "commit", "reload", "rebuild", "field", "workpool", "any", "submission", "indices",
-    "restrict", "unrestrict"
+    'users', 'using', 'uuid', 'values', 'varchar', 'varint', 'view', 'where', 'with', 'writetime'
 ))
 """
 Set of keywords in CQL.
@@ -73,7 +67,7 @@ Derived from .../cassandra/src/java/org/apache/cassandra/cql3/Cql.g
 cql_keywords_unreserved = set((
     'aggregate', 'all', 'as', 'ascii', 'bigint', 'blob', 'boolean', 'called', 'clustering', 'compact', 'contains',
     'count', 'counter', 'custom', 'date', 'decimal', 'deterministic', 'distinct', 'double', 'exists', 'filtering', 'finalfunc', 'float',
-    'frozen', 'function', 'functions', 'inet', 'initcond', 'input', 'int', 'json', 'key', 'keys', 'keyspaces',
+    'frozen', 'function', 'functions', 'inet', 'initcond', 'input', 'int', 'json', 'jsonb', 'key', 'keys', 'keyspaces',
     'language', 'list', 'login', 'map', 'monotonic', 'nologin', 'nosuperuser', 'options', 'password', 'permission', 'permissions',
     'returns', 'role', 'roles', 'sfunc', 'smallint', 'static', 'storage', 'stype', 'superuser', 'text', 'time',
     'timestamp', 'timeuuid', 'tinyint', 'trigger', 'ttl', 'tuple', 'type', 'user', 'users', 'uuid', 'values', 'varchar',
@@ -1454,7 +1448,7 @@ class TableMetadataV3(TableMetadata):
     compaction_options = {}
 
     option_maps = [
-        'compaction', 'compression', 'caching',
+        'compaction', 'compression', 'caching', 'transactions',
         'nodesync'  # added DSE 6.0
     ]
 
@@ -1657,15 +1651,55 @@ class IndexMetadata(object):
     kind = None
     """ A string representing the kind of index (COMPOSITE, CUSTOM,...). """
 
+    is_unique = False
+    """ Whether this is a unique index. """
+
+    partition_key = None
+    """
+    A list of :class:`.ColumnMetadata` instances representing the columns in
+    the partition key for this index.  This will always hold at least one
+    column.
+    """
+
+    clustering_key = None
+    """
+    A list of :class:`.ColumnMetadata` instances representing the columns
+    in the clustering key for this index.  These are all of the
+    :attr:`.primary_key` columns that are not in the :attr:`.partition_key`.
+
+    Note that an index may have no clustering keys, in which case this will
+    be an empty list.
+    """
+
+    columns = None
+    """
+    A dict mapping column names to :class:`.ColumnMetadata` instances.
+    """
+
     index_options = {}
     """ A dict of index options. """
 
-    def __init__(self, keyspace_name, table_name, index_name, kind, index_options):
+    transactions_options = None
+    """ Transactions options for this index. """
+
+    tablets = None
+    """
+    Number of tablets in this index when the user created it. This number doesn't reflect
+    the current number of tablets (which can change due to dynamic tablet splitting).
+    """
+
+    def __init__(self, keyspace_name, table_name, index_name, kind, is_unique, index_options, transactions_options, tablets):
         self.keyspace_name = keyspace_name
         self.table_name = table_name
         self.name = index_name
         self.kind = kind
+        self.is_unique = is_unique
+        self.partition_key = []
+        self.clustering_key = []
+        self.columns = OrderedDict()
         self.index_options = index_options
+        self.transactions_options = transactions_options
+        self.tablets = tablets
 
     def as_cql_query(self):
         """
@@ -1674,11 +1708,25 @@ class IndexMetadata(object):
         options = dict(self.index_options)
         index_target = options.pop("target")
         if self.kind != "CUSTOM":
-            return "CREATE INDEX %s ON %s.%s (%s)" % (
+            ret = "CREATE %sINDEX %s ON %s.%s (%s)" % (
+                "UNIQUE " if self.is_unique else "",
                 protect_name(self.name),
                 protect_name(self.keyspace_name),
                 protect_name(self.table_name),
                 index_target)
+            index_include = options.pop("include", None)
+            if index_include:
+                ret += " INCLUDE (%s)" % index_include
+
+            index_predicate = options.pop("predicate", None)
+            if index_predicate:
+                ret += " WHERE %s" % index_predicate
+
+            options["transactions"] = self.transactions_options
+            options["tablets"] = self.tablets
+            properties = TableMetadataV3._property_string(True, self.clustering_key, options)
+            ret += "\n    WITH %s" % properties
+            return ret
         else:
             class_name = options.pop("class_name")
             ret = "CREATE CUSTOM INDEX %s ON %s.%s (%s) USING '%s'" % (
@@ -2358,7 +2406,7 @@ class SchemaParserV22(_SchemaParser):
                         # no index option for full-collection index
                         target = 'full(%s)' % (target,)
             options['target'] = target
-            return IndexMetadata(column_metadata.table.keyspace_name, column_metadata.table.name, index_name, kind, options)
+            return IndexMetadata(column_metadata.table.keyspace_name, column_metadata.table.name, index_name, kind, index_options = options)
 
     @staticmethod
     def _build_trigger_metadata(table_metadata, row):
@@ -2506,7 +2554,11 @@ class SchemaParserV3(SchemaParserV22):
         'memtable_flush_period_in_ms',
         'min_index_interval',
         'read_repair_chance',
-        'speculative_retry')
+        'speculative_retry',
+        'transactions',
+        # Number of tablets in this table when the user created it. This number doesn't reflect
+        # the current number of tablets (which can change due to dynamic tablet splitting).
+        'tablets')
 
     def __init__(self, connection, timeout):
         super(SchemaParserV3, self).__init__(connection, timeout)
@@ -2673,13 +2725,18 @@ class SchemaParserV3(SchemaParserV22):
         column_meta = ColumnMetadata(table_metadata, name, cql_type, is_static, is_reversed)
         return column_meta
 
-    @staticmethod
-    def _build_index_metadata(table_metadata, row):
+    def _build_index_metadata(self, table_metadata, row):
         index_name = row.get("index_name")
         kind = row.get("kind")
         if index_name or kind:
+            is_unique = row.get("is_unique")
             index_options = row.get("options")
-            return IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, index_options)
+            transactions_options = row.get("transactions")
+            tablets = row.get("tablets")
+            index_meta = IndexMetadata(table_metadata.keyspace_name, table_metadata.name, index_name, kind, is_unique, index_options, transactions_options, tablets)
+            col_rows = self.keyspace_table_col_rows[table_metadata.keyspace_name][index_name]
+            self._build_table_columns(index_meta, col_rows)
+            return index_meta
         else:
             return None
 

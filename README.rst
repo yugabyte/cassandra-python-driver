@@ -1,15 +1,17 @@
-DataStax Driver for Apache Cassandra
-====================================
+YugaByte Python Driver for YugaByte DB's Cassandra compatible YCQL API
+======================================================================
 
-.. image:: https://travis-ci.com/datastax/python-driver.png?branch=master
-   :target: https://travis-ci.com/github/datastax/python-driver
 
-A modern, `feature-rich <https://github.com/datastax/python-driver#features>`_ and highly-tunable Python client library for Apache Cassandra (2.1+) and
-DataStax Enterprise (4.7+) using exclusively Cassandra's binary protocol and Cassandra Query Language v3.
+A modern, `feature-rich <https://github.com/yugabyte/cassandra-python-driver#features>`_ and highly-tunable Python client library for YugaByte DB's Cassandra compatible YCQL API using Cassandra's binary protocol and Cassandra Query Language v3.
 
 The driver supports Python 3.8 through 3.12.
 
-**Note:** DataStax products do not support big-endian systems.
+
+**Note:** This driver does not support big-endian systems.
+
+Feedback Requested
+------------------
+Please provide feedback by opening an issue on github.
 
 Features
 --------
@@ -31,31 +33,23 @@ Installation
 ------------
 Installation through pip is recommended::
 
-    $ pip install cassandra-driver
+    $ pip install yb-cassandra-driver
 
 For more complete installation instructions, see the
 `installation guide <http://datastax.github.io/python-driver/installation.html>`_.
 
 Documentation
 -------------
-The documentation can be found online `here <http://datastax.github.io/python-driver/index.html>`_.
-
 A couple of links for getting up to speed:
 
-* `Installation <http://datastax.github.io/python-driver/installation.html>`_
-* `Getting started guide <http://datastax.github.io/python-driver/getting_started.html>`_
+* `Getting started guide <https://docs.yugabyte.com/latest/develop/client-drivers/python/>`_
 * `API docs <http://datastax.github.io/python-driver/api/index.html>`_
 * `Performance tips <http://datastax.github.io/python-driver/performance.html>`_
 
-Object Mapper
--------------
-cqlengine (originally developed by Blake Eggleston and Jon Haddad, with contributions from the
-community) is now maintained as an integral part of this package. Refer to
-`documentation here <http://datastax.github.io/python-driver/object_mapper.html>`_.
 
 Contributing
 ------------
-See `CONTRIBUTING.md <https://github.com/datastax/python-driver/blob/master/CONTRIBUTING.rst>`_.
+See `CONTRIBUTING.md <https://github.com/YugaByte/cassandra-python-driver/blob/master/CONTRIBUTING.rst>`_.
 
 Error Handling
 --------------
@@ -63,20 +57,15 @@ While originally written for the Java driver, users may reference the `Cassandra
 
 Reporting Problems
 ------------------
-Please report any bugs and make any feature requests on the
-`JIRA <https://datastax-oss.atlassian.net/browse/PYTHON>`_ issue tracker.
-
-If you would like to contribute, please feel free to open a pull request.
+Please report any bugs and make any feature requests on github.
 
 Getting Help
 ------------
-Your best options for getting help with the driver are the
-`mailing list <https://groups.google.com/a/lists.datastax.com/forum/#!forum/python-driver-user>`_
-and the `DataStax Community <https://community.datastax.com>`_.
+For help on this product, please open a github issue.
 
 License
 -------
-Copyright DataStax, Inc.
+Copyright 2018, YugaByte Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
